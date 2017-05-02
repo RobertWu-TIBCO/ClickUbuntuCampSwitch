@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <pd:name>Level2Server/OfferLinkSwitch.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="offerid" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="rediskey" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="redisfieldrange" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>91</pd:startX>
+    <pd:startY>60</pd:startY>
+    <pd:returnBindings>
+        <root>
+            <xsl:if test="$GetOfferLinkFromRedis/javaCodeActivityOutput/offer_link">
+                <offer_link>
+                    <xsl:value-of select="$GetOfferLinkFromRedis/javaCodeActivityOutput/offer_link"/>
+                </offer_link>
+            </xsl:if>
+        </root>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="offer_link" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>450</pd:endX>
+    <pd:endY>64</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1482141369773</pd:targetNamespace>
+    <pd:group name="Group">
+        <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
+        <pd:resourceType>ae.process.group</pd:resourceType>
+        <pd:x>156</pd:x>
+        <pd:y>2</pd:y>
+        <pd:width>238</pd:width>
+        <pd:height>138</pd:height>
+        <pd:collapsedWidth>57</pd:collapsedWidth>
+        <pd:collapsedHeight>70</pd:collapsedHeight>
+        <pd:groupVariables/>
+        <pd:joinToggle>inherit</pd:joinToggle>
+        <config>
+            <pd:groupType>errorLoop</pd:groupType>
+            <pd:serializable>false</pd:serializable>
+            <pd:indexSlot>finish</pd:indexSlot>
+            <pd:errorCondition>$finish &gt;3</pd:errorCondition>
+            <pd:suspendAfterErrorRetry>false</pd:suspendAfterErrorRetry>
+        </config>
+        <pd:inputBindings/>
+        <pd:expanded>true</pd:expanded>
+        <pd:transition>
+            <pd:from>start</pd:from>
+            <pd:to>GetOfferLinkFromRedis</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>GetOfferLinkFromRedis</pd:from>
+            <pd:to>end</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:activity name="GetOfferLinkFromRedis">
+            <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+            <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+            <pd:x>268</pd:x>
+            <pd:y>65</pd:y>
+            <config>
+                <fileName>OfferLinkSwitchGetOfferLinkFromRedis</fileName>
+                <packageName>Level2Server.OfferLinkSwitch</packageName>
+                <fullsource>package Level2Server.OfferLinkSwitch;
+import java.util.*;
+import java.io.*;
+import redis.clients.jedis.Jedis;     
+public class OfferLinkSwitchGetOfferLinkFromRedis{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String offerid = "";
+	protected String rediskey = "";
+	protected int redisfieldrange = 0;
+	protected String redishost = "";
+	protected int redisport = 0;
+	protected String redispass = "";
+	protected String offer_link = "";
+	protected boolean finished = false;
+	public String getofferid() {
+		return offerid;
+	}
+	public void setofferid(String val) {
+		offerid = val;
+	}
+	public String getrediskey() {
+		return rediskey;
+	}
+	public void setrediskey(String val) {
+		rediskey = val;
+	}
+	public int getredisfieldrange() {
+		return redisfieldrange;
+	}
+	public void setredisfieldrange(int val) {
+		redisfieldrange = val;
+	}
+	public String getredishost() {
+		return redishost;
+	}
+	public void setredishost(String val) {
+		redishost = val;
+	}
+	public int getredisport() {
+		return redisport;
+	}
+	public void setredisport(int val) {
+		redisport = val;
+	}
+	public String getredispass() {
+		return redispass;
+	}
+	public void setredispass(String val) {
+		redispass = val;
+	}
+	public String getoffer_link() {
+		return offer_link;
+	}
+	public void setoffer_link(String val) {
+		offer_link = val;
+	}
+	public boolean getfinished() {
+		return finished;
+	}
+	public void setfinished(boolean val) {
+		finished = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public OfferLinkSwitchGetOfferLinkFromRedis() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String offerid
+	In  : String rediskey
+	In  : int redisfieldrange
+	In  : String redishost
+	In  : int redisport
+	In  : String redispass
+	Out : String offer_link
+	Out : boolean finished
+* Available Variables: DO NOT MODIFY *****/
+
+Random rand =new Random();
+
+String redisfield=String.valueOf(rand.nextInt(redisfieldrange)+1);
+
+	  Jedis jedis =  new Jedis(redishost,6379,100000); 
+	 //jedis.auth(redispass);
+	 offer_link=jedis.hget(rediskey,redisfield); 
+finished=true;}
+}
+</fullsource>
+                <inputData>
+                    <row>
+                        <fieldName>offerid</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>rediskey</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redisfieldrange</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redishost</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redisport</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redispass</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                </inputData>
+                <outputData>
+                    <row>
+                        <fieldName>offer_link</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>finished</fieldName>
+                        <fieldType>boolean</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                </outputData>
+                <byteCode>
+                    <class>
+                        <name>OfferLinkSwitchGetOfferLinkFromRedis</name>
+                        <byteCode>yv66vgAAADMAWwkAEwA/CQATAEAJABMAQQkAEwBCCQATAEMJABMARAkAEwBFCQATAEYKABQARwgASAcASQoACwBHCgALAEoKAEsATAcATQMAAYagCgAPAE4KAA8ATwcAUAcAUQEAB29mZmVyaWQBABJMamF2YS9sYW5nL1N0cmluZzsBAAhyZWRpc2tleQEAD3JlZGlzZmllbGRyYW5nZQEAAUkBAAlyZWRpc2hvc3QBAAlyZWRpc3BvcnQBAAlyZWRpc3Bhc3MBAApvZmZlcl9saW5rAQAIZmluaXNoZWQBAAFaAQAKZ2V0b2ZmZXJpZAEAFCgpTGphdmEvbGFuZy9TdHJpbmc7AQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEACnNldG9mZmVyaWQBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBAAtnZXRyZWRpc2tleQEAC3NldHJlZGlza2V5AQASZ2V0cmVkaXNmaWVsZHJhbmdlAQADKClJAQASc2V0cmVkaXNmaWVsZHJhbmdlAQAEKEkpVgEADGdldHJlZGlzaG9zdAEADHNldHJlZGlzaG9zdAEADGdldHJlZGlzcG9ydAEADHNldHJlZGlzcG9ydAEADGdldHJlZGlzcGFzcwEADHNldHJlZGlzcGFzcwEADWdldG9mZmVyX2xpbmsBAA1zZXRvZmZlcl9saW5rAQALZ2V0ZmluaXNoZWQBAAMoKVoBAAtzZXRmaW5pc2hlZAEABChaKVYBAAY8aW5pdD4BAAMoKVYBAAZpbnZva2UBAApFeGNlcHRpb25zBwBSAQAKU291cmNlRmlsZQEAKU9mZmVyTGlua1N3aXRjaEdldE9mZmVyTGlua0Zyb21SZWRpcy5qYXZhDAAVABYMABcAFgwAGAAZDAAaABYMABsAGQwAHAAWDAAdABYMAB4AHwwAOAA5AQAAAQAQamF2YS91dGlsL1JhbmRvbQwAUwBUBwBVDABWAFcBABlyZWRpcy9jbGllbnRzL2plZGlzL0plZGlzDAA4AFgMAFkAWgEAQUxldmVsMlNlcnZlci9PZmZlckxpbmtTd2l0Y2gvT2ZmZXJMaW5rU3dpdGNoR2V0T2ZmZXJMaW5rRnJvbVJlZGlzAQAQamF2YS9sYW5nL09iamVjdAEAE2phdmEvbGFuZy9FeGNlcHRpb24BAAduZXh0SW50AQAEKEkpSQEAEGphdmEvbGFuZy9TdHJpbmcBAAd2YWx1ZU9mAQAVKEkpTGphdmEvbGFuZy9TdHJpbmc7AQAXKExqYXZhL2xhbmcvU3RyaW5nO0lJKVYBAARoZ2V0AQA4KExqYXZhL2xhbmcvU3RyaW5nO0xqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZzsAIQATABQAAAAIAAQAFQAWAAAABAAXABYAAAAEABgAGQAAAAQAGgAWAAAABAAbABkAAAAEABwAFgAAAAQAHQAWAAAABAAeAB8AAAASAAEAIAAhAAEAIgAAAB0AAQABAAAABSq0AAGwAAAAAQAjAAAABgABAAAAEAABACQAJQABACIAAAAiAAIAAgAAAAYqK7UAAbEAAAABACMAAAAKAAIAAAATAAUAFAABACYAIQABACIAAAAdAAEAAQAAAAUqtAACsAAAAAEAIwAAAAYAAQAAABYAAQAnACUAAQAiAAAAIgACAAIAAAAGKiu1AAKxAAAAAQAjAAAACgACAAAAGQAFABoAAQAoACkAAQAiAAAAHQABAAEAAAAFKrQAA6wAAAABACMAAAAGAAEAAAAcAAEAKgArAAEAIgAAACIAAgACAAAABiobtQADsQAAAAEAIwAAAAoAAgAAAB8ABQAgAAEALAAhAAEAIgAAAB0AAQABAAAABSq0AASwAAAAAQAjAAAABgABAAAAIgABAC0AJQABACIAAAAiAAIAAgAAAAYqK7UABLEAAAABACMAAAAKAAIAAAAlAAUAJgABAC4AKQABACIAAAAdAAEAAQAAAAUqtAAFrAAAAAEAIwAAAAYAAQAAACgAAQAvACsAAQAiAAAAIgACAAIAAAAGKhu1AAWxAAAAAQAjAAAACgACAAAAKwAFACwAAQAwACEAAQAiAAAAHQABAAEAAAAFKrQABrAAAAABACMAAAAGAAEAAAAuAAEAMQAlAAEAIgAAACIAAgACAAAABiortQAGsQAAAAEAIwAAAAoAAgAAADEABQAyAAEAMgAhAAEAIgAAAB0AAQABAAAABSq0AAewAAAAAQAjAAAABgABAAAANAABADMAJQABACIAAAAiAAIAAgAAAAYqK7UAB7EAAAABACMAAAAKAAIAAAA3AAUAOAABADQANQABACIAAAAdAAEAAQAAAAUqtAAIrAAAAAEAIwAAAAYAAQAAADoAAQA2ADcAAQAiAAAAIgACAAIAAAAGKhu1AAixAAAAAQAjAAAACgACAAAAPQAFAD4AAQA4ADkAAQAiAAAAbgACAAEAAAAyKrcACSoSCrUAASoSCrUAAioDtQADKhIKtQAEKgO1AAUqEgq1AAYqEgq1AAcqA7UACLEAAAABACMAAAAqAAoAAABAAAQABwAKAAgAEAAJABUACgAbAAsAIAAMACYADQAsAA4AMQBBAAEAOgA5AAIAIgAAAGIABQAEAAAAOrsAC1m3AAxMKyq0AAO2AA0EYLgADk27AA9ZKrQABBEY6xIQtwARTiotKrQAAiy2ABK1AAcqBLUACLEAAAABACMAAAAWAAUAAABOAAgAUAAWAFIAJwBUADQAVQA7AAAABAABADwAAQA9AAAAAgA+</byteCode>
+                    </class>
+                </byteCode>
+            </config>
+            <pd:inputBindings>
+                <javaCodeActivityInput>
+                    <xsl:if test="$Start/root/offerid">
+                        <offerid>
+                            <xsl:value-of select="$Start/root/offerid"/>
+                        </offerid>
+                    </xsl:if>
+                    <rediskey>
+                        <xsl:value-of select="$Start/root/rediskey"/>
+                    </rediskey>
+                    <xsl:if test="$Start/root/redisfieldrange">
+                        <redisfieldrange>
+                            <xsl:value-of select="$Start/root/redisfieldrange"/>
+                        </redisfieldrange>
+                    </xsl:if>
+                    <redishost>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Log/redishost"/>
+                    </redishost>
+                    <redisport>
+                        <xsl:value-of select="6379"/>
+                    </redisport>
+                    <redispass>
+                        <xsl:value-of select="&quot;!VMD1kult&quot;"/>
+                    </redispass>
+                </javaCodeActivityInput>
+            </pd:inputBindings>
+        </pd:activity>
+    </pd:group>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>179</pd:x>
+        <pd:y>190</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>375</pd:x>
+        <pd:y>192</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Group</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Group</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

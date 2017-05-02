@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://xmlns.tibco.com/encodings/mime" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://xmlns.tibco.com/bw/plugin-api/messages/context" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns12="www.tibco.com/plugin/java/JavaMethodActivityInput">
+    <pd:name>Level1Server/dotapp_encodeUrl.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startX>72</pd:startX>
+    <pd:startY>43</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>402</pd:endX>
+    <pd:endY>53</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1472233940811</pd:targetNamespace>
+    <pd:activity name="SyncTracker">
+        <pd:type>com.tibco.plugin.http.client.HttpRequestActivity</pd:type>
+        <pd:resourceType>httppalette.httpRequest</pd:resourceType>
+        <pd:x>178</pd:x>
+        <pd:y>136</pd:y>
+        <config>
+            <inputOutputVersion>5.3.0</inputOutputVersion>
+            <newMimeSupport>true</newMimeSupport>
+            <authScheme>NONE</authScheme>
+            <InputHeaders>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="Accept" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Charset" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Encoding" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </InputHeaders>
+            <OutputHeaders>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="Allow" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Length" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Encoding" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Date" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </OutputHeaders>
+        </config>
+        <pd:inputBindings>
+            <RequestActivityInput>
+                <Host>
+                    <xsl:value-of select="&quot;svr.dotinapp.com&quot;"/>
+                </Host>
+                <RequestURI>
+                    <xsl:value-of select="&quot;ics&quot;"/>
+                </RequestURI>
+                <QueryString>
+                    <xsl:value-of select="&quot;sid=1239&amp;adid=4005708&amp;clickid=364c83_d09af2774d55630a::22635::::::d09af2774d55630a::CN_1489659992855&amp;idfa=&amp;ip=223.104.147.187&amp;ua=Mozilla%2F5.0%20(iPhone%3B%20CPU%20iPhone%20OS%2010_2_1%20like%20Mac%20OS%20X)%20AppleWebKit%2F602.4.6%20(KHTML%2C%20like%20Gecko)%20Version%2F10.0%20Mobile%2F14D27%20Safari%2F602.1&quot;"/>
+                </QueryString>
+                <Timeout>
+                    <xsl:value-of select="60000"/>
+                </Timeout>
+            </RequestActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="TD">
+        <pd:type>com.tibco.plugin.http.client.HttpRequestActivity</pd:type>
+        <pd:resourceType>httppalette.httpRequest</pd:resourceType>
+        <pd:x>323</pd:x>
+        <pd:y>141</pd:y>
+        <config>
+            <inputOutputVersion>5.3.0</inputOutputVersion>
+            <newMimeSupport>true</newMimeSupport>
+            <authScheme>NONE</authScheme>
+            <useSsl>false</useSsl>
+            <ns0:ssl xmlns:ns0="http://www.tibco.com/xmlns/aemeta/services/2002">
+                <ns0:strongCipherSuitesOnly>true</ns0:strongCipherSuitesOnly>
+            </ns0:ssl>
+            <InputHeaders>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="Accept" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Charset" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Encoding" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Cookie" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </InputHeaders>
+            <OutputHeaders>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="Allow" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Length" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Encoding" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Date" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </OutputHeaders>
+        </config>
+        <pd:inputBindings>
+            <RequestActivityInput>
+                <Host>
+                    <xsl:value-of select="substring-before(substring-after($SyncTracker/RequestActivityOutput/Headers/Location, &quot;://&quot;), &quot;/&quot;)"/>
+                </Host>
+                <RequestURI>
+                    <xsl:value-of select="substring-before(substring-after(substring-after($SyncTracker/RequestActivityOutput/Headers/Location, &quot;://&quot;), &quot;/&quot;),&quot;?&quot;)"/>
+                </RequestURI>
+                <QueryString>
+                    <xsl:value-of select="concat(&#xA;substring-after(substring-after(substring-after($SyncTracker/RequestActivityOutput/Headers/Location, &quot;://&quot;), &quot;/&quot;),&quot;?&quot;),&#xA;&quot;&amp;ip=&quot;,&#xA;&quot;223.104.147.187&quot;,&#xA;&quot;&amp;useragent=&quot;,&#xA;&quot;Mozilla%2F5.0%20(iPhone%3B%20CPU%20iPhone%20OS%2010_2_1%20like%20Mac%20OS%20X)%20AppleWebKit%2F602.4.6%20(KHTML%2C%20like%20Gecko)%20Version%2F10.0%20Mobile%2F14D27%20Safari%2F602.1&quot;,&#xA;&quot;&amp;action=none&quot;&#xA;)"/>
+                </QueryString>
+                <Timeout>
+                    <xsl:value-of select="60000"/>
+                </Timeout>
+            </RequestActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>SyncTracker</pd:from>
+        <pd:to>TD</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>TD</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>SyncTracker</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

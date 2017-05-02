@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <pd:name>Level2Server/CampaignSwitch.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="allids" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="campaign_id" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="offer_id" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="n_id" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="NotGet" type="xsd:boolean" minOccurs="0"/>
+                    <xsd:element name="NoCampBak" type="xsd:int" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>91</pd:startX>
+    <pd:startY>53</pd:startY>
+    <pd:returnBindings>
+        <xsl:copy-of select="$GetFromRedis/root"/>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="campaign_id" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="offer_id" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="n_id" type="xsd:int" minOccurs="0"/>
+                    <xsd:element name="campaign_status" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="campaign_rm" type="xsd:double" minOccurs="0"/>
+                    <xsd:element name="campaign_expend_t" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="campaign_expend_c" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="campaign_expend_n" type="xsd:double" minOccurs="0"/>
+                    <xsd:element name="campaign_tl" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="campaign_pl" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="offer_click_tl" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="notinsert" type="xsd:boolean" minOccurs="0"/>
+                    <xsd:element name="appid" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="seat" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="creative_id" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="picpath" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="n_pl" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="product_lp" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:endX>590</pd:endX>
+    <pd:endY>161</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1482141369773</pd:targetNamespace>
+    <pd:group name="Group">
+        <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
+        <pd:resourceType>ae.process.group</pd:resourceType>
+        <pd:x>13</pd:x>
+        <pd:y>133</pd:y>
+        <pd:width>230</pd:width>
+        <pd:height>151</pd:height>
+        <pd:collapsedWidth>57</pd:collapsedWidth>
+        <pd:collapsedHeight>70</pd:collapsedHeight>
+        <pd:groupVariables/>
+        <pd:joinToggle>inherit</pd:joinToggle>
+        <config>
+            <pd:groupType>errorLoop</pd:groupType>
+            <pd:serializable>false</pd:serializable>
+            <pd:indexSlot>finish</pd:indexSlot>
+            <pd:errorCondition>$finish&gt;5</pd:errorCondition>
+            <pd:suspendAfterErrorRetry>false</pd:suspendAfterErrorRetry>
+        </config>
+        <pd:inputBindings/>
+        <pd:expanded>true</pd:expanded>
+        <pd:transition>
+            <pd:from>start</pd:from>
+            <pd:to>GetOfferLinkFromRedis</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>GetOfferLinkFromRedis</pd:from>
+            <pd:to>end</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:activity name="GetOfferLinkFromRedis">
+            <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+            <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+            <pd:x>100</pd:x>
+            <pd:y>206</pd:y>
+            <config>
+                <fileName>CampaignSwitchGetOfferLinkFromRedis</fileName>
+                <packageName>Level2Server.CampaignSwitch</packageName>
+                <fullsource>package Level2Server.CampaignSwitch;
+import java.util.*;
+import java.io.*;
+import redis.clients.jedis.Jedis;     
+public class CampaignSwitchGetOfferLinkFromRedis{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String offerid = "";
+	protected String nid = "";
+	protected String rediskey = "";
+	protected String redishost = "";
+	protected int redisport = 0;
+	protected String redispass = "";
+	protected String bakupkey = "";
+	protected boolean finished = false;
+	protected int campaignrate1 = 0;
+	protected int campaignrate2 = 0;
+	protected int campaignrate3 = 0;
+	public String getofferid() {
+		return offerid;
+	}
+	public void setofferid(String val) {
+		offerid = val;
+	}
+	public String getnid() {
+		return nid;
+	}
+	public void setnid(String val) {
+		nid = val;
+	}
+	public String getrediskey() {
+		return rediskey;
+	}
+	public void setrediskey(String val) {
+		rediskey = val;
+	}
+	public String getredishost() {
+		return redishost;
+	}
+	public void setredishost(String val) {
+		redishost = val;
+	}
+	public int getredisport() {
+		return redisport;
+	}
+	public void setredisport(int val) {
+		redisport = val;
+	}
+	public String getredispass() {
+		return redispass;
+	}
+	public void setredispass(String val) {
+		redispass = val;
+	}
+	public String getbakupkey() {
+		return bakupkey;
+	}
+	public void setbakupkey(String val) {
+		bakupkey = val;
+	}
+	public boolean getfinished() {
+		return finished;
+	}
+	public void setfinished(boolean val) {
+		finished = val;
+	}
+	public int getcampaignrate1() {
+		return campaignrate1;
+	}
+	public void setcampaignrate1(int val) {
+		campaignrate1 = val;
+	}
+	public int getcampaignrate2() {
+		return campaignrate2;
+	}
+	public void setcampaignrate2(int val) {
+		campaignrate2 = val;
+	}
+	public int getcampaignrate3() {
+		return campaignrate3;
+	}
+	public void setcampaignrate3(int val) {
+		campaignrate3 = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public CampaignSwitchGetOfferLinkFromRedis() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String offerid
+	In  : String nid
+	In  : String rediskey
+	In  : String redishost
+	In  : int redisport
+	In  : String redispass
+	Out : String bakupkey
+	Out : boolean finished
+	Out : int campaignrate1
+	Out : int campaignrate2
+	Out : int campaignrate3
+* Available Variables: DO NOT MODIFY *****/
+Jedis jedis =  new Jedis(redishost,redisport,100000);
+jedis.auth(redispass);
+bakupkey=rediskey;
+Map map= new HashMap();
+map=jedis.hgetAll(rediskey);
+if(map.size()&gt;0){
+Random rand =new Random();
+int ranum=rand.nextInt(100)+1;
+String str3=jedis.hget(rediskey,"campaignrate3");
+campaignrate3=Integer.parseInt(str3!=null?str3:"0");
+if(campaignrate3==0||campaignrate3&lt;ranum)
+{
+bakupkey=rediskey;
+}
+else{
+str3=jedis.hget(rediskey,"campaignrate1");
+campaignrate1=Integer.parseInt(str3!=null?str3:"0");
+str3=jedis.hget(rediskey,"campaignrate2");
+campaignrate2=Integer.parseInt(str3!=null?str3:"0");
+
+if(ranum &gt; campaignrate2)
+bakupkey=jedis.hget(rediskey,"offeridnid3"); 
+else if (ranum &gt; campaignrate1)
+bakupkey=jedis.hget(rediskey,"offeridnid2"); 
+else
+bakupkey=jedis.hget(rediskey,"offeridnid1"); 
+
+}
+}
+finished=true;
+}
+}
+</fullsource>
+                <outputData>
+                    <row>
+                        <fieldName>bakupkey</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>finished</fieldName>
+                        <fieldType>boolean</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaignrate1</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaignrate2</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>campaignrate3</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                </outputData>
+                <inputData>
+                    <row>
+                        <fieldName>offerid</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>nid</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>rediskey</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redishost</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redisport</fieldName>
+                        <fieldType>int</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                    <row>
+                        <fieldName>redispass</fieldName>
+                        <fieldType>string</fieldType>
+                        <fieldRequired>optional</fieldRequired>
+                    </row>
+                </inputData>
+                <byteCode>
+                    <class>
+                        <name>CampaignSwitchGetOfferLinkFromRedis</name>
+                        <byteCode>yv66vgAAADMAjAkAIgBdCQAiAF4JACIAXwkAIgBgCQAiAGEJACIAYgkAIgBjCQAiAGQJACIAZQkAIgBmCQAiAGcKACMAaAgAaQcAagMAAYagCgAOAGsKAA4AbAcAbQoAEgBoCgAOAG4LAG8AcAcAcQoAFgBoCgAWAHIIADEKAA4AcwgAdAoAdQB2CAAvCAAwCAB3CAB4CAB5BwB6BwB7AQAHb2ZmZXJpZAEAEkxqYXZhL2xhbmcvU3RyaW5nOwEAA25pZAEACHJlZGlza2V5AQAJcmVkaXNob3N0AQAJcmVkaXNwb3J0AQABSQEACXJlZGlzcGFzcwEACGJha3Vwa2V5AQAIZmluaXNoZWQBAAFaAQANY2FtcGFpZ25yYXRlMQEADWNhbXBhaWducmF0ZTIBAA1jYW1wYWlnbnJhdGUzAQAKZ2V0b2ZmZXJpZAEAFCgpTGphdmEvbGFuZy9TdHJpbmc7AQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEACnNldG9mZmVyaWQBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBAAZnZXRuaWQBAAZzZXRuaWQBAAtnZXRyZWRpc2tleQEAC3NldHJlZGlza2V5AQAMZ2V0cmVkaXNob3N0AQAMc2V0cmVkaXNob3N0AQAMZ2V0cmVkaXNwb3J0AQADKClJAQAMc2V0cmVkaXNwb3J0AQAEKEkpVgEADGdldHJlZGlzcGFzcwEADHNldHJlZGlzcGFzcwEAC2dldGJha3Vwa2V5AQALc2V0YmFrdXBrZXkBAAtnZXRmaW5pc2hlZAEAAygpWgEAC3NldGZpbmlzaGVkAQAEKFopVgEAEGdldGNhbXBhaWducmF0ZTEBABBzZXRjYW1wYWlnbnJhdGUxAQAQZ2V0Y2FtcGFpZ25yYXRlMgEAEHNldGNhbXBhaWducmF0ZTIBABBnZXRjYW1wYWlnbnJhdGUzAQAQc2V0Y2FtcGFpZ25yYXRlMwEABjxpbml0PgEAAygpVgEABmludm9rZQEADVN0YWNrTWFwVGFibGUHAHoHAGoHAHwHAHEHAH0BAApFeGNlcHRpb25zBwB+AQAKU291cmNlRmlsZQEAKENhbXBhaWduU3dpdGNoR2V0T2ZmZXJMaW5rRnJvbVJlZGlzLmphdmEMACQAJQwAJgAlDAAnACUMACgAJQwAKQAqDAArACUMACwAJQwALQAuDAAvACoMADAAKgwAMQAqDABQAFEBAAABABlyZWRpcy9jbGllbnRzL2plZGlzL0plZGlzDABQAH8MAIAAgQEAEWphdmEvdXRpbC9IYXNoTWFwDACCAIMHAHwMAIQAPwEAEGphdmEvdXRpbC9SYW5kb20MAIUAhgwAhwCIAQABMAcAiQwAigCLAQALb2ZmZXJpZG5pZDMBAAtvZmZlcmlkbmlkMgEAC29mZmVyaWRuaWQxAQA/TGV2ZWwyU2VydmVyL0NhbXBhaWduU3dpdGNoL0NhbXBhaWduU3dpdGNoR2V0T2ZmZXJMaW5rRnJvbVJlZGlzAQAQamF2YS9sYW5nL09iamVjdAEADWphdmEvdXRpbC9NYXABABBqYXZhL2xhbmcvU3RyaW5nAQATamF2YS9sYW5nL0V4Y2VwdGlvbgEAFyhMamF2YS9sYW5nL1N0cmluZztJSSlWAQAEYXV0aAEAJihMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmc7AQAHaGdldEFsbAEAIyhMamF2YS9sYW5nL1N0cmluZzspTGphdmEvdXRpbC9NYXA7AQAEc2l6ZQEAB25leHRJbnQBAAQoSSlJAQAEaGdldAEAOChMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmc7AQARamF2YS9sYW5nL0ludGVnZXIBAAhwYXJzZUludAEAFShMamF2YS9sYW5nL1N0cmluZzspSQAhACIAIwAAAAsABAAkACUAAAAEACYAJQAAAAQAJwAlAAAABAAoACUAAAAEACkAKgAAAAQAKwAlAAAABAAsACUAAAAEAC0ALgAAAAQALwAqAAAABAAwACoAAAAEADEAKgAAABgAAQAyADMAAQA0AAAAHQABAAEAAAAFKrQAAbAAAAABADUAAAAGAAEAAAATAAEANgA3AAEANAAAACIAAgACAAAABiortQABsQAAAAEANQAAAAoAAgAAABYABQAXAAEAOAAzAAEANAAAAB0AAQABAAAABSq0AAKwAAAAAQA1AAAABgABAAAAGQABADkANwABADQAAAAiAAIAAgAAAAYqK7UAArEAAAABADUAAAAKAAIAAAAcAAUAHQABADoAMwABADQAAAAdAAEAAQAAAAUqtAADsAAAAAEANQAAAAYAAQAAAB8AAQA7ADcAAQA0AAAAIgACAAIAAAAGKiu1AAOxAAAAAQA1AAAACgACAAAAIgAFACMAAQA8ADMAAQA0AAAAHQABAAEAAAAFKrQABLAAAAABADUAAAAGAAEAAAAlAAEAPQA3AAEANAAAACIAAgACAAAABiortQAEsQAAAAEANQAAAAoAAgAAACgABQApAAEAPgA/AAEANAAAAB0AAQABAAAABSq0AAWsAAAAAQA1AAAABgABAAAAKwABAEAAQQABADQAAAAiAAIAAgAAAAYqG7UABbEAAAABADUAAAAKAAIAAAAuAAUALwABAEIAMwABADQAAAAdAAEAAQAAAAUqtAAGsAAAAAEANQAAAAYAAQAAADEAAQBDADcAAQA0AAAAIgACAAIAAAAGKiu1AAaxAAAAAQA1AAAACgACAAAANAAFADUAAQBEADMAAQA0AAAAHQABAAEAAAAFKrQAB7AAAAABADUAAAAGAAEAAAA3AAEARQA3AAEANAAAACIAAgACAAAABiortQAHsQAAAAEANQAAAAoAAgAAADoABQA7AAEARgBHAAEANAAAAB0AAQABAAAABSq0AAisAAAAAQA1AAAABgABAAAAPQABAEgASQABADQAAAAiAAIAAgAAAAYqG7UACLEAAAABADUAAAAKAAIAAABAAAUAQQABAEoAPwABADQAAAAdAAEAAQAAAAUqtAAJrAAAAAEANQAAAAYAAQAAAEMAAQBLAEEAAQA0AAAAIgACAAIAAAAGKhu1AAmxAAAAAQA1AAAACgACAAAARgAFAEcAAQBMAD8AAQA0AAAAHQABAAEAAAAFKrQACqwAAAABADUAAAAGAAEAAABJAAEATQBBAAEANAAAACIAAgACAAAABiobtQAKsQAAAAEANQAAAAoAAgAAAEwABQBNAAEATgA/AAEANAAAAB0AAQABAAAABSq0AAusAAAAAQA1AAAABgABAAAATwABAE8AQQABADQAAAAiAAIAAgAAAAYqG7UAC7EAAAABADUAAAAKAAIAAABSAAUAUwABAFAAUQABADQAAACKAAIAAQAAAEIqtwAMKhINtQABKhINtQACKhINtQADKhINtQAEKgO1AAUqEg21AAYqEg21AAcqA7UACCoDtQAJKgO1AAoqA7UAC7EAAAABADUAAAA2AA0AAABVAAQABwAKAAgAEAAJABYACgAcAAsAIQAMACcADQAtAA4AMgAPADcAEAA8ABEAQQBWAAEAUgBRAAIANAAAAgcABQAGAAABD7sADlkqtAAEKrQABRIPtwAQTCsqtAAGtgARVyoqtAADtQAHuwASWbcAE00rKrQAA7YAFE0suQAVAQCeAM+7ABZZtwAXTi0QZLYAGARgNgQrKrQAAxIZtgAaOgUqGQXGAAgZBacABRIbuAActQALKrQAC5kADCq0AAsVBKIADioqtAADtQAHpwCDKyq0AAMSHbYAGjoFKhkFxgAIGQWnAAUSG7gAHLUACSsqtAADEh62ABo6BSoZBcYACBkFpwAFEhu4ABy1AAoVBCq0AAqkABQqKyq0AAMSH7YAGrUAB6cAKxUEKrQACaQAFCorKrQAAxIgtgAatQAHpwARKisqtAADEiG2ABq1AAcqBLUACLEAAAACADUAAABeABcAAABlABIAZgAbAGcAIwBoACsAaQA0AGoAPQBrAEUAbABPAG0AWwBuAG4AbwB+AHEAiQB0AJUAdQCoAHYAtAB3AMcAeQDQAHoA4QB7AOoAfAD7AH4BCQCCAQ4AgwBTAAAAggAL/wBmAAYHAFQHAFUHAFYHAFcBBwBYAAEHAFT/AAEABgcAVAcAVQcAVgcAVwEHAFgAAgcAVAcAWBUKVgcAVP8AAQAGBwBUBwBVBwBWBwBXAQcAWAACBwBUBwBYXAcAVP8AAQAGBwBUBwBVBwBWBwBXAQcAWAACBwBUBwBYHxn4AA0AWQAAAAQAAQBaAAEAWwAAAAIAXA==</byteCode>
+                    </class>
+                </byteCode>
+            </config>
+            <pd:inputBindings>
+                <javaCodeActivityInput>
+                    <offerid>
+                        <xsl:value-of select="$Start/root/offer_id"/>
+                    </offerid>
+                    <xsl:if test="$Start/root/n_id">
+                        <nid>
+                            <xsl:value-of select="$Start/root/n_id"/>
+                        </nid>
+                    </xsl:if>
+                    <rediskey>
+                        <xsl:value-of select="$Start/root/allids"/>
+                    </rediskey>
+                    <redishost>
+                        <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Log/redishost"/>
+                    </redishost>
+                    <redisport>
+                        <xsl:value-of select="6379"/>
+                    </redisport>
+                    <redispass>
+                        <xsl:value-of select="&quot;!VMD1kult&quot;"/>
+                    </redispass>
+                </javaCodeActivityInput>
+            </pd:inputBindings>
+        </pd:activity>
+    </pd:group>
+    <pd:activity name="GetFromRedis">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>453</pd:x>
+        <pd:y>158</pd:y>
+        <config>
+            <processName>/RedisCommon/GetContent.process</processName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:if test="$Get_offer_id_n_id/root/allids">
+                    <allids>
+                        <xsl:value-of select="$Get_offer_id_n_id/root/allids"/>
+                    </allids>
+                </xsl:if>
+                <xsl:if test="$Get_offer_id_n_id/root/offer_id">
+                    <offer_id>
+                        <xsl:value-of select="$Get_offer_id_n_id/root/offer_id"/>
+                    </offer_id>
+                </xsl:if>
+                <xsl:if test="$Get_offer_id_n_id/root/n_id">
+                    <n_id>
+                        <xsl:value-of select="$Get_offer_id_n_id/root/n_id"/>
+                    </n_id>
+                </xsl:if>
+                <xsl:if test="$Start/root/NotGet">
+                    <NotGet>
+                        <xsl:value-of select="$Start/root/NotGet"/>
+                    </NotGet>
+                </xsl:if>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Get_offer_id_n_id">
+        <pd:type>com.tibco.pe.core.GetSharedVariableActivity</pd:type>
+        <pd:resourceType>ae.activities.getSharedVariable</pd:resourceType>
+        <pd:x>349</pd:x>
+        <pd:y>50</pd:y>
+        <config>
+            <variableConfig>/Level2Server/offer_id_n_id_etc.jobsharedvariable</variableConfig>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Set_offer_id_n_id">
+        <pd:type>com.tibco.pe.core.SetSharedVariableActivity</pd:type>
+        <pd:resourceType>ae.activities.setSharedVariable</pd:resourceType>
+        <pd:x>218</pd:x>
+        <pd:y>52</pd:y>
+        <config>
+            <variableConfig>/Level2Server/offer_id_n_id_etc.jobsharedvariable</variableConfig>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:if test="$Start/root/allids">
+                    <allids>
+                        <xsl:value-of select="$Start/root/allids"/>
+                    </allids>
+                </xsl:if>
+                <xsl:if test="$Start/root/campaign_id">
+                    <campaign_id>
+                        <xsl:value-of select="$Start/root/campaign_id"/>
+                    </campaign_id>
+                </xsl:if>
+                <offer_id>
+                    <xsl:value-of select="$Start/root/offer_id"/>
+                </offer_id>
+                <n_id>
+                    <xsl:value-of select="$Start/root/n_id"/>
+                </n_id>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Set_offer_id_n_id_bak">
+        <pd:type>com.tibco.pe.core.SetSharedVariableActivity</pd:type>
+        <pd:resourceType>ae.activities.setSharedVariable</pd:resourceType>
+        <pd:x>349</pd:x>
+        <pd:y>214</pd:y>
+        <config>
+            <variableConfig>/Level2Server/offer_id_n_id_etc.jobsharedvariable</variableConfig>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:if test="$GetOfferLinkFromRedis/javaCodeActivityOutput/bakupkey">
+                    <allids>
+                        <xsl:value-of select="$GetOfferLinkFromRedis/javaCodeActivityOutput/bakupkey"/>
+                    </allids>
+                </xsl:if>
+                <offer_id>
+                    <xsl:value-of select="substring-before($GetOfferLinkFromRedis/javaCodeActivityOutput/bakupkey, &quot;-&quot;)"/>
+                </offer_id>
+                <n_id>
+                    <xsl:value-of select="substring-after($GetOfferLinkFromRedis/javaCodeActivityOutput/bakupkey,&quot;-&quot;)"/>
+                </n_id>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>467</pd:x>
+        <pd:y>248</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Rethrow">
+        <pd:type>com.tibco.pe.core.RethrowActivity</pd:type>
+        <pd:resourceType>ae.activities.rethrow</pd:resourceType>
+        <pd:x>622</pd:x>
+        <pd:y>249</pd:y>
+        <config/>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Group</pd:from>
+        <pd:to>Set_offer_id_n_id_bak</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GetFromRedis</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Group</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Set_offer_id_n_id</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$Start/root/NoCampBak=1</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Get_offer_id_n_id</pd:from>
+        <pd:to>GetFromRedis</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Set_offer_id_n_id</pd:from>
+        <pd:to>Get_offer_id_n_id</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Set_offer_id_n_id_bak</pd:from>
+        <pd:to>Get_offer_id_n_id</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>Rethrow</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

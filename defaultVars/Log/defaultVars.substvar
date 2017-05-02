@@ -1,0 +1,29 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>ClickLog</name>
+			<value>E:\SoftWares\Project\log\click\click.log</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1481912546505</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>TmpRedisFile</name>
+			<value>E:\SoftWares\Project\log\click\click_tmp.log</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1481912546505</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>redishost</name>
+			<value>172.17.0.1</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1482328504206</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>

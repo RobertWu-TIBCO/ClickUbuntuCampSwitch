@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="www.tibco.com/plugin/java/JavaMethodActivityInput" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+    <pd:name>Level1Server/PaiPaiDai.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startX>49</pd:startX>
+    <pd:startY>46</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>317</pd:endX>
+    <pd:endY>173</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1488190059724</pd:targetNamespace>
+    <pd:activity name="Send HTTP Request">
+        <pd:type>com.tibco.plugin.http.client.HttpRequestActivity</pd:type>
+        <pd:resourceType>httppalette.httpRequest</pd:resourceType>
+        <pd:x>313</pd:x>
+        <pd:y>50</pd:y>
+        <config>
+            <inputOutputVersion>5.3.0</inputOutputVersion>
+            <newMimeSupport>true</newMimeSupport>
+            <authScheme>NONE</authScheme>
+            <InputHeaders>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="X-PPD-APPID" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-PPD-SIGN" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-PPD-APPVERSION" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-PPD-DEVICEID" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-PPD-TIMESTAMP" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-PPD-TIMESTAMP-SIGN" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Charset" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Encoding" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </InputHeaders>
+            <OutputHeaders>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="Allow" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Length" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Encoding" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Date" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </OutputHeaders>
+        </config>
+        <pd:inputBindings>
+            <RequestActivityInput>
+                <xsl:if test="$Map-Data/root/host">
+                    <Host>
+                        <xsl:value-of select="$Map-Data/root/host"/>
+                    </Host>
+                </xsl:if>
+                <Method>
+                    <xsl:value-of select="$Map-Data/root/method"/>
+                </Method>
+                <RequestURI>
+                    <xsl:value-of select="$Map-Data/root/requestUrl"/>
+                </RequestURI>
+                <PostData>
+                    <xsl:value-of select="$Map-Data/root/postdata"/>
+                </PostData>
+                <xsl:if test="$Map-Data/root/queryString">
+                    <QueryString>
+                        <xsl:value-of select="$Map-Data/root/queryString"/>
+                    </QueryString>
+                </xsl:if>
+                <xsl:if test="$Map-Data/root/timeout">
+                    <Timeout>
+                        <xsl:value-of select="$Map-Data/root/timeout"/>
+                    </Timeout>
+                </xsl:if>
+                <Headers>
+                    <X-PPD-APPID>
+                        <xsl:value-of select="$Map-Data/root/X-PPD-APPID"/>
+                    </X-PPD-APPID>
+                    <X-PPD-SIGN>
+                        <xsl:value-of select="$Map-Data/root/X-PPD-SIGN"/>
+                    </X-PPD-SIGN>
+                    <X-PPD-APPVERSION>
+                        <xsl:value-of select="$Map-Data/root/X-PPD-APPVERSION"/>
+                    </X-PPD-APPVERSION>
+                    <X-PPD-DEVICEID>
+                        <xsl:value-of select="$Map-Data/root/X-PPD-DEVICEID"/>
+                    </X-PPD-DEVICEID>
+                    <X-PPD-TIMESTAMP>
+                        <xsl:value-of select="$Map-Data/root/X-PPD-TIMESTAMP"/>
+                    </X-PPD-TIMESTAMP>
+                    <X-PPD-TIMESTAMP-SIGN>
+                        <xsl:value-of select="$Map-Data/root/X-PPD-TIMESTAMP-SIGN"/>
+                    </X-PPD-TIMESTAMP-SIGN>
+                    <Accept>
+                        <xsl:value-of select="$Map-Data/root/accept"/>
+                    </Accept>
+                    <Content-Type>
+                        <xsl:value-of select="$Map-Data/root/content-type"/>
+                    </Content-Type>
+                </Headers>
+            </RequestActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Map Data">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>177</pd:x>
+        <pd:y>49</pd:y>
+        <config>
+            <element>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="host" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="method" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="requestUrl" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="queryString" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="timeout" type="xsd:int" minOccurs="0"/>
+                            <xsd:element name="content-type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="accept" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-PPD-APPID" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-PPD-SIGN" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-PPD-APPVERSION" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-PPD-DEVICEID" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-PPD-TIMESTAMP" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-PPD-TIMESTAMP-SIGN" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="postdata" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </element>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <host>
+                    <xsl:value-of select="&quot;gw.open.ppdai.com&quot;"/>
+                </host>
+                <method>
+                    <xsl:value-of select="&quot;POST&quot;"/>
+                </method>
+                <requestUrl>
+                    <xsl:value-of select="&quot;/marketing/AdvertiseService/SaveAdvertise&quot;"/>
+                </requestUrl>
+                <timeout>
+                    <xsl:value-of select="60000"/>
+                </timeout>
+                <content-type>
+                    <xsl:value-of select="&quot;application/json; charset=utf-8&quot;"/>
+                </content-type>
+                <accept>
+                    <xsl:value-of select="&quot;application/json&quot;"/>
+                </accept>
+                <X-PPD-APPID>
+                    <xsl:value-of select="&quot;ff9c2c390ff9419e838edf8d4001dbee&quot;"/>
+                </X-PPD-APPID>
+                <X-PPD-APPVERSION>
+                    <xsl:value-of select="&quot;1.6&quot;"/>
+                </X-PPD-APPVERSION>
+                <X-PPD-DEVICEID>
+                    <xsl:value-of select="&quot;860076035514685&quot;"/>
+                </X-PPD-DEVICEID>
+                <X-PPD-TIMESTAMP>
+                    <xsl:value-of select="tib:translate-timezone(current-dateTime(), &quot;UTC&quot;)"/>
+                </X-PPD-TIMESTAMP>
+                <postdata>
+                    <xsl:value-of select="'{&quot;AppId&quot;:&quot;4e2646a403874c3190d7f20ad50ea943&quot;,&quot;CallBackUrl&quot;:&quot;http://www.baidu.com&quot;,&quot;DeviceId&quot;:&quot;860076035514685&quot;,&quot;Idfa&quot;:&quot;CABD3A60-05AE-431E-B792-7DAB78303ED5&quot;,&quot;Mac&quot;:&quot;&quot;,&quot;Source&quot;:4}'"/>
+                </postdata>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Java Code">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>55</pd:x>
+        <pd:y>175</pd:y>
+        <config>
+            <fileName>PaiPaiDaiJavaCode</fileName>
+            <packageName>Level1Server.PaiPaiDai</packageName>
+            <fullsource>package Level1Server.PaiPaiDai;
+import java.util.*;
+import java.io.*;
+public class PaiPaiDaiJavaCode{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public PaiPaiDaiJavaCode() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+* Available Variables: DO NOT MODIFY *****/
+
+}
+}
+</fullsource>
+            <byteCode>
+                <class>
+                    <name>PaiPaiDaiJavaCode</name>
+                    <byteCode>yv66vgAAADMAEQoAAwANBwAOBwAPAQAGPGluaXQ+AQADKClWAQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEABmludm9rZQEACkV4Y2VwdGlvbnMHABABAApTb3VyY2VGaWxlAQAWUGFpUGFpRGFpSmF2YUNvZGUuamF2YQwABAAFAQAoTGV2ZWwxU2VydmVyL1BhaVBhaURhaS9QYWlQYWlEYWlKYXZhQ29kZQEAEGphdmEvbGFuZy9PYmplY3QBABNqYXZhL2xhbmcvRXhjZXB0aW9uACEAAgADAAAAAAACAAEABAAFAAEABgAAACEAAQABAAAABSq3AAGxAAAAAQAHAAAACgACAAAABwAEAAgAAQAIAAUAAgAGAAAAGQAAAAEAAAABsQAAAAEABwAAAAYAAQAAAA0ACQAAAAQAAQAKAAEACwAAAAIADA==</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Java Method">
+        <pd:type>com.tibco.plugin.java.JavaMethodActivity</pd:type>
+        <pd:resourceType>ae.activities.JavaMethodActivity</pd:resourceType>
+        <pd:x>179</pd:x>
+        <pd:y>177</pd:y>
+        <config>
+            <ConstructDeclaredClass>false</ConstructDeclaredClass>
+            <CacheConstructedClass>false</CacheConstructedClass>
+            <InvokeCleanupMethod>false</InvokeCleanupMethod>
+            <MethodInfo>
+                <classLocation>/opt/tibco/tpcl/5.9/jdbc/PaiPaiDai.jar</classLocation>
+                <classPath>/AliasLibrary.aliaslib</classPath>
+                <className>com.ppdai.open.idfa.IDFABizDemo</className>
+                <methodName>PaiPaiDaiSave</methodName>
+                <methodReturn>void</methodReturn>
+                <methodParameter>java.lang.String</methodParameter>
+                <methodParameter>java.lang.String</methodParameter>
+                <methodParameter>java.lang.String</methodParameter>
+                <methodParameter>java.lang.String</methodParameter>
+                <methodParameter>java.lang.Integer</methodParameter>
+            </MethodInfo>
+        </config>
+        <pd:inputBindings>
+            <ns:JavaMethodActivityInput>
+                <MethodParameters>
+                    <Parameter1>
+                        <xsl:value-of select="&quot;&quot;"/>
+                    </Parameter1>
+                    <Parameter2>
+                        <xsl:value-of select="&quot;&quot;"/>
+                    </Parameter2>
+                    <Parameter3>
+                        <xsl:value-of select="&quot;&quot;"/>
+                    </Parameter3>
+                    <Parameter4>
+                        <xsl:value-of select="&quot;&quot;"/>
+                    </Parameter4>
+                    <Parameter5>
+                        <xsl:value-of select="15"/>
+                    </Parameter5>
+                </MethodParameters>
+            </ns:JavaMethodActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Map Data</pd:from>
+        <pd:to>Send HTTP Request</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Java Code</pd:from>
+        <pd:to>Java Method</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Java Method</pd:from>
+        <pd:to>Map Data</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Java Code</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Send HTTP Request</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+    <pd:name>Level3Server/SelfPost.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="root">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name="rm" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="camp_pl" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="offer_id" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="n_id" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="allParams" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="camp_id" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="clickid" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="n_pl" type="xsd:string" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:startType>
+    <pd:startX>40</pd:startX>
+    <pd:startY>89</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>535</pd:endX>
+    <pd:endY>86</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1477974462402</pd:targetNamespace>
+    <pd:activity name="JudgeRM">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>170</pd:x>
+        <pd:y>89</pd:y>
+        <config>
+            <fileName>SelfPostJudgeRM</fileName>
+            <packageName>Level3Server.SelfPost</packageName>
+            <fullsource>package Level3Server.SelfPost;
+import java.util.*;
+import java.io.*;
+public class SelfPostJudgeRM{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected int randomNumber = 0;
+	public int getrandomNumber() {
+		return randomNumber;
+	}
+	public void setrandomNumber(int val) {
+		randomNumber = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public SelfPostJudgeRM() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	Out : int randomNumber
+* Available Variables: DO NOT MODIFY *****/
+
+
+Random rand =new Random();
+
+randomNumber=rand.nextInt(10000);}
+}
+</fullsource>
+            <inputData/>
+            <outputData>
+                <row>
+                    <fieldName>randomNumber</fieldName>
+                    <fieldType>int</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <byteCode>
+                <class>
+                    <name>SelfPostJudgeRM</name>
+                    <byteCode>yv66vgAAADMAIAkABgAXCgAHABgHABkKAAMAGAoAAwAaBwAbBwAcAQAMcmFuZG9tTnVtYmVyAQABSQEAD2dldHJhbmRvbU51bWJlcgEAAygpSQEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBAA9zZXRyYW5kb21OdW1iZXIBAAQoSSlWAQAGPGluaXQ+AQADKClWAQAGaW52b2tlAQAKRXhjZXB0aW9ucwcAHQEAClNvdXJjZUZpbGUBABRTZWxmUG9zdEp1ZGdlUk0uamF2YQwACAAJDAAQABEBABBqYXZhL3V0aWwvUmFuZG9tDAAeAB8BACVMZXZlbDNTZXJ2ZXIvU2VsZlBvc3QvU2VsZlBvc3RKdWRnZVJNAQAQamF2YS9sYW5nL09iamVjdAEAE2phdmEvbGFuZy9FeGNlcHRpb24BAAduZXh0SW50AQAEKEkpSQAhAAYABwAAAAEABAAIAAkAAAAEAAEACgALAAEADAAAAB0AAQABAAAABSq0AAGsAAAAAQANAAAABgABAAAACAABAA4ADwABAAwAAAAiAAIAAgAAAAYqG7UAAbEAAAABAA0AAAAKAAIAAAALAAUADAABABAAEQABAAwAAAAqAAIAAQAAAAoqtwACKgO1AAGxAAAAAQANAAAADgADAAAADgAEAAYACQAPAAEAEgARAAIADAAAADAAAwACAAAAFLsAA1m3AARMKisRJxC2AAW1AAGxAAAAAQANAAAACgACAAAAFgAIABgAEwAAAAQAAQAUAAEAFQAAAAIAFg==</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput/>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ReplaceMacros">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>266</pd:x>
+        <pd:y>198</pd:y>
+        <config>
+            <fileName>SelfPostReplaceMacros</fileName>
+            <packageName>Level3Server.SelfPost</packageName>
+            <fullsource>package Level3Server.SelfPost;
+import java.util.*;
+import java.io.*;
+public class SelfPostReplaceMacros{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String AllParams = "";
+	protected String realPl = "";
+	protected String clickid = "";
+	protected String ReplacedUrl = "";
+	protected String mapStr = "";
+	public String getAllParams() {
+		return AllParams;
+	}
+	public void setAllParams(String val) {
+		AllParams = val;
+	}
+	public String getrealPl() {
+		return realPl;
+	}
+	public void setrealPl(String val) {
+		realPl = val;
+	}
+	public String getclickid() {
+		return clickid;
+	}
+	public void setclickid(String val) {
+		clickid = val;
+	}
+	public String getReplacedUrl() {
+		return ReplacedUrl;
+	}
+	public void setReplacedUrl(String val) {
+		ReplacedUrl = val;
+	}
+	public String getmapStr() {
+		return mapStr;
+	}
+	public void setmapStr(String val) {
+		mapStr = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public SelfPostReplaceMacros() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String AllParams
+	In  : String realPl
+	In  : String clickid
+	Out : String ReplacedUrl
+	Out : String mapStr
+	Out : String realPl
+* Available Variables: DO NOT MODIFY *****/
+		 mapStr= "{"+AllParams.replaceAll("&amp;",",")+"}";
+		// mapStr= ""+AllParams.replaceAll("&amp;",",")+"";
+		Map&lt;String, String&gt; ParamMap = mapStringToMap(mapStr);
+		ReplacedUrl= realPl;
+
+		String[] AllParams_array;
+		AllParams_array = realPl.split("\\$\\{");
+	//	System.out.println("Arrays.toString(AllParams_array) : \t"
+	//			+ Arrays.toString(AllParams_array) + "\n  realPl : \t" + realPl+ " \n mapStr : "+ mapStr+ " \n real map :"+ParamMap.toString());
+
+		List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+
+		for (String param_i : AllParams_array) {
+			try {
+				param_i = param_i.substring(0, param_i.indexOf("}"));
+				list.add(param_i);
+			} catch (Exception e) {
+				continue;
+			}
+		}
+
+		// @SuppressWarnings("unchecked")
+
+		for (String str : list) {
+			try {
+				String w = (String) ParamMap.get(str);
+
+			//	System.out.println("------------------------------------------");
+			/*
+	System.out.println(" RelacedUrl :  \t" + ReplacedUrl
+						+ "\n\n The String to be replaced : \t " + "${" + str
+						+ "}"
+						+ "\n\n The values to be used for replacing : \t " + w);
+				System.out
+						.println("------------------------------------------");
+*/
+				if (w == null || w.contains("${") || w.equals("$" + str))
+					ReplacedUrl = ReplacedUrl.replace("${" + str + "}", "");
+				else
+					ReplacedUrl= ReplacedUrl.replace("${" + str + "}", w);
+			} catch (Exception e) {
+				ReplacedUrl = ReplacedUrl.replace("${" + str + "}", "");
+				continue;
+			}
+		}
+		//System.out.println("The last output RelacedUrl : \t " + ReplacedUrl);
+	 mapStr= "{"+(AllParams+"&amp;clickid="+clickid).replaceAll("&amp;",",")+"}";
+	//	System.out.println("--------------------------------");
+
+           }
+
+public static Map&lt;String, String&gt; mapStringToMap(String str) {
+		str = str.substring(1, str.length() - 1);
+		System.out.println("str : "+str);
+//		String[] strs = str.split(", ");
+// note for above space after ,
+		String[] strs = str.split(",");
+		Map&lt;String, String&gt; map = new HashMap&lt;String, String&gt;();
+		for (String string : strs) {
+			String key = string.split("=")[0];
+	        try {
+				String value = string.split("=")[1];
+				System.out.println(" key : "+key +"value sys  : "+value);
+				map.put(key, value);	
+			} catch (Exception e) {
+				continue;
+			}
+		}
+		return map;
+	}
+}
+</fullsource>
+            <outputData>
+                <row>
+                    <fieldName>ReplacedUrl</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>mapStr</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>realPl</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <inputData>
+                <row>
+                    <fieldName>AllParams</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>realPl</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>clickid</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <byteCode>
+                <class>
+                    <name>SelfPostReplaceMacros</name>
+                    <byteCode>yv66vgAAADMAsAkALwBXCQAvAFgJAC8AWQkALwBaCQAvAFsKADAAXAgAXQcAXgoACABcCABfCgAIAGAIAGEIAGIKAB0AYwgAZAoACABlCgAvAGYIAGcKAB0AaAcAaQoAFABcCgAdAGoKAB0AawsAbABtBwBuCwBsAG8LAHAAcQsAcAByBwBzCwB0AHUIAHYKAB0AdwgAeAoAHQB5CgAdAHoIAHsKAB0AfAkAfQB+CAB/CgCAAIEHAIIKACkAXAgAgwgAhAgAhQsAdACGBwCHBwCIAQAJQWxsUGFyYW1zAQASTGphdmEvbGFuZy9TdHJpbmc7AQAGcmVhbFBsAQAHY2xpY2tpZAEAC1JlcGxhY2VkVXJsAQAGbWFwU3RyAQAMZ2V0QWxsUGFyYW1zAQAUKClMamF2YS9sYW5nL1N0cmluZzsBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQAMc2V0QWxsUGFyYW1zAQAVKExqYXZhL2xhbmcvU3RyaW5nOylWAQAJZ2V0cmVhbFBsAQAJc2V0cmVhbFBsAQAKZ2V0Y2xpY2tpZAEACnNldGNsaWNraWQBAA5nZXRSZXBsYWNlZFVybAEADnNldFJlcGxhY2VkVXJsAQAJZ2V0bWFwU3RyAQAJc2V0bWFwU3RyAQAGPGluaXQ+AQADKClWAQAGaW52b2tlAQANU3RhY2tNYXBUYWJsZQcAhwcAiQcAigcAiwcAcwcAbgcAjAEACkV4Y2VwdGlvbnMBAA5tYXBTdHJpbmdUb01hcAEAIyhMamF2YS9sYW5nL1N0cmluZzspTGphdmEvdXRpbC9NYXA7AQAJU2lnbmF0dXJlAQBJKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS91dGlsL01hcDxMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL1N0cmluZzs+OwEAClNvdXJjZUZpbGUBABpTZWxmUG9zdFJlcGxhY2VNYWNyb3MuamF2YQwAMQAyDAAzADIMADQAMgwANQAyDAA2ADIMAEUARgEAAAEAF2phdmEvbGFuZy9TdHJpbmdCdWlsZGVyAQABewwAjQCOAQABJgEAASwMAI8AkAEAAX0MAJEAOAwAUQBSAQAEXCRcewwAkgCTAQATamF2YS91dGlsL0FycmF5TGlzdAwAlACVDACWAJcHAIsMAJgAmQEAE2phdmEvbGFuZy9FeGNlcHRpb24MAJoAmwcAjAwAnACdDACeAJ8BABBqYXZhL2xhbmcvU3RyaW5nBwCJDACgAKEBAAIkewwAogCjAQABJAwApACZDAClAKYBAAkmY2xpY2tpZD0MAKcAqAcAqQwAqgCrAQAGc3RyIDogBwCsDACtADwBABFqYXZhL3V0aWwvSGFzaE1hcAEAAT0BAAcga2V5IDogAQANdmFsdWUgc3lzICA6IAwArgCvAQArTGV2ZWwzU2VydmVyL1NlbGZQb3N0L1NlbGZQb3N0UmVwbGFjZU1hY3JvcwEAEGphdmEvbGFuZy9PYmplY3QBAA1qYXZhL3V0aWwvTWFwAQATW0xqYXZhL2xhbmcvU3RyaW5nOwEADmphdmEvdXRpbC9MaXN0AQASamF2YS91dGlsL0l0ZXJhdG9yAQAGYXBwZW5kAQAtKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZ0J1aWxkZXI7AQAKcmVwbGFjZUFsbAEAOChMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmc7AQAIdG9TdHJpbmcBAAVzcGxpdAEAJyhMamF2YS9sYW5nL1N0cmluZzspW0xqYXZhL2xhbmcvU3RyaW5nOwEAB2luZGV4T2YBABUoTGphdmEvbGFuZy9TdHJpbmc7KUkBAAlzdWJzdHJpbmcBABYoSUkpTGphdmEvbGFuZy9TdHJpbmc7AQADYWRkAQAVKExqYXZhL2xhbmcvT2JqZWN0OylaAQAIaXRlcmF0b3IBABYoKUxqYXZhL3V0aWwvSXRlcmF0b3I7AQAHaGFzTmV4dAEAAygpWgEABG5leHQBABQoKUxqYXZhL2xhbmcvT2JqZWN0OwEAA2dldAEAJihMamF2YS9sYW5nL09iamVjdDspTGphdmEvbGFuZy9PYmplY3Q7AQAIY29udGFpbnMBABsoTGphdmEvbGFuZy9DaGFyU2VxdWVuY2U7KVoBAAZlcXVhbHMBAAdyZXBsYWNlAQBEKExqYXZhL2xhbmcvQ2hhclNlcXVlbmNlO0xqYXZhL2xhbmcvQ2hhclNlcXVlbmNlOylMamF2YS9sYW5nL1N0cmluZzsBAAZsZW5ndGgBAAMoKUkBABBq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</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <xsl:if test="$Start/root/allParams">
+                    <AllParams>
+                        <xsl:value-of select="$Start/root/allParams"/>
+                    </AllParams>
+                </xsl:if>
+                <realPl>
+                    <xsl:value-of select="concat($Start/root/camp_pl,$realPL/root/n_pl)"/>
+                </realPl>
+                <xsl:if test="$Start/root/clickid">
+                    <clickid>
+                        <xsl:value-of select="$Start/root/clickid"/>
+                    </clickid>
+                </xsl:if>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Map Data">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>535</pd:x>
+        <pd:y>196</pd:y>
+        <config>
+            <element>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="Host" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="RequestUrl" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="RequestUrl_Real" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="QueryString" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </element>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <Host>
+                    <xsl:value-of select="substring-before(substring-after($ReplaceMacros/javaCodeActivityOutput/ReplacedUrl,&quot;://&quot;), &quot;/&quot;)"/>
+                </Host>
+                <RequestUrl>
+                    <xsl:value-of select="substring-after(substring-after($ReplaceMacros/javaCodeActivityOutput/ReplacedUrl,&quot;://&quot;), &quot;/&quot;)"/>
+                </RequestUrl>
+                <RequestUrl_Real>
+                    <xsl:value-of select="substring-before(substring-after(substring-after($ReplaceMacros/javaCodeActivityOutput/ReplacedUrl,&quot;://&quot;), &quot;/&quot;),&quot;?&quot;)"/>
+                </RequestUrl_Real>
+                <QueryString>
+                    <xsl:value-of select="substring-after(substring-after(substring-after($ReplaceMacros/javaCodeActivityOutput/ReplacedUrl,&quot;://&quot;), &quot;/&quot;),&quot;?&quot;)"/>
+                </QueryString>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Redis_WriteConversionLog-1">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:description>concat(current-dateTime(),";",$ConversionDupQueue/ns:ActivityOutput/Body/root/mapStr,";","rm&amp;lf;")
+
+$_globalVariables/ns1:GlobalVariables/Log/ConversionLog</pd:description>
+        <pd:x>419</pd:x>
+        <pd:y>201</pd:y>
+        <config>
+            <fileName>SelfPostRedis_WriteConversionLog1</fileName>
+            <packageName>Level3Server.SelfPost</packageName>
+            <fullsource>package Level3Server.SelfPost;
+import java.util.*;
+import java.io.*;
+import redis.clients.jedis.Jedis;     
+@SuppressWarnings("unchecked")
+public class SelfPostRedis_WriteConversionLog1{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String textContent = "";
+	protected String redishost = "";
+	protected String key = "";
+	protected String field = "";
+	public String gettextContent() {
+		return textContent;
+	}
+	public void settextContent(String val) {
+		textContent = val;
+	}
+	public String getredishost() {
+		return redishost;
+	}
+	public void setredishost(String val) {
+		redishost = val;
+	}
+	public String getkey() {
+		return key;
+	}
+	public void setkey(String val) {
+		key = val;
+	}
+	public String getfield() {
+		return field;
+	}
+	public void setfield(String val) {
+		field = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public SelfPostRedis_WriteConversionLog1() {
+	}
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String textContent
+	In  : String redishost
+	In  : String key
+	In  : String field
+* Available Variables: DO NOT MODIFY *****/
+	
+
+	  Jedis jedis =  new Jedis(redishost,6379,100000); 
+         jedis.auth("!VMD1kult");
+	//Map hmap=(HashMap)MapObj;
+	
+	jedis.lpush("conversionLogList", textContent); 
+	
+	jedis.hincrBy(key, field, 1);
+	//jedis.disconnect();
+}
+}
+</fullsource>
+            <inputData>
+                <row>
+                    <fieldName>textContent</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>redishost</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>key</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>field</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <byteCode>
+                <class>
+                    <name>SelfPostRedis_WriteConversionLog1</name>
+                    <byteCode>yv66vgAAADMAQgkAEAAqCQAQACsJABAALAkAEAAtCgARAC4IAC8HADADAAGGoAoABwAxCAAyCgAHADMIADQHADUKAAcANgoABwA3BwA4BwA5AQALdGV4dENvbnRlbnQBABJMamF2YS9sYW5nL1N0cmluZzsBAAlyZWRpc2hvc3QBAANrZXkBAAVmaWVsZAEADmdldHRleHRDb250ZW50AQAUKClMamF2YS9sYW5nL1N0cmluZzsBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQAOc2V0dGV4dENvbnRlbnQBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBAAxnZXRyZWRpc2hvc3QBAAxzZXRyZWRpc2hvc3QBAAZnZXRrZXkBAAZzZXRrZXkBAAhnZXRmaWVsZAEACHNldGZpZWxkAQAGPGluaXQ+AQADKClWAQAGaW52b2tlAQAKRXhjZXB0aW9ucwcAOgEAClNvdXJjZUZpbGUBACZTZWxmUG9zdFJlZGlzX1dyaXRlQ29udmVyc2lvbkxvZzEuamF2YQwAEgATDAAUABMMABUAEwwAFgATDAAjACQBAAABABlyZWRpcy9jbGllbnRzL2plZGlzL0plZGlzDAAjADsBAAkhVk1EMWt1bHQMADwAPQEAEWNvbnZlcnNpb25Mb2dMaXN0AQAQamF2YS9sYW5nL1N0cmluZwwAPgA/DABAAEEBADdMZXZlbDNTZXJ2ZXIvU2VsZlBvc3QvU2VsZlBvc3RSZWRpc19Xcml0ZUNvbnZlcnNpb25Mb2cxAQAQamF2YS9sYW5nL09iamVjdAEAE2phdmEvbGFuZy9FeGNlcHRpb24BABcoTGphdmEvbGFuZy9TdHJpbmc7SUkpVgEABGF1dGgBACYoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvU3RyaW5nOwEABWxwdXNoAQA3KExqYXZhL2xhbmcvU3RyaW5nO1tMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9Mb25nOwEAB2hpbmNyQnkBADcoTGphdmEvbGFuZy9TdHJpbmc7TGphdmEvbGFuZy9TdHJpbmc7SilMamF2YS9sYW5nL0xvbmc7ACEAEAARAAAABAAEABIAEwAAAAQAFAATAAAABAAVABMAAAAEABYAEwAAAAoAAQAXABgAAQAZAAAAHQABAAEAAAAFKrQAAbAAAAABABoAAAAGAAEAAAANAAEAGwAcAAEAGQAAACIAAgACAAAABiortQABsQAAAAEAGgAAAAoAAgAAABAABQARAAEAHQAYAAEAGQAAAB0AAQABAAAABSq0AAKwAAAAAQAaAAAABgABAAAAEwABAB4AHAABABkAAAAiAAIAAgAAAAYqK7UAArEAAAABABoAAAAKAAIAAAAWAAUAFwABAB8AGAABABkAAAAdAAEAAQAAAAUqtAADsAAAAAEAGgAAAAYAAQAAABkAAQAgABwAAQAZAAAAIgACAAIAAAAGKiu1AAOxAAAAAQAaAAAACgACAAAAHAAFAB0AAQAhABgAAQAZAAAAHQABAAEAAAAFKrQABLAAAAABABoAAAAGAAEAAAAfAAEAIgAcAAEAGQAAACIAAgACAAAABiortQAEsQAAAAEAGgAAAAoAAgAAACIABQAjAAEAIwAkAAEAGQAAAEkAAgABAAAAHSq3AAUqEga1AAEqEga1AAIqEga1AAMqEga1AASxAAAAAQAaAAAAGgAGAAAAJQAEAAgACgAJABAACgAWAAsAHAAmAAEAJQAkAAIAGQAAAGEABgACAAAAObsAB1kqtAACERjrEgi3AAlMKxIKtgALVysSDAS9AA1ZAyq0AAFTtgAOVysqtAADKrQABAq2AA9XsQAAAAEAGgAAABYABQAAADAAEQAxABgANAAqADYAOAA4ACYAAAAEAAEAJwABACgAAAACACk=</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <xsl:choose xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                    <xsl:when test="$ReplaceMacros/javaCodeActivityOutput/realPl=&quot;&quot;">
+                        <textContent>
+                            <xsl:value-of select="concat(current-dateTime(),&quot;@_@&quot;,$ReplaceMacros/javaCodeActivityOutput/mapStr,&quot;@_@&quot;,&quot;Empty&quot;,&quot;&#xA;&quot;)"/>
+                        </textContent>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <textContent>
+                            <xsl:value-of select="concat(current-dateTime(),&quot;@_@&quot;,$ReplaceMacros/javaCodeActivityOutput/mapStr,&quot;@_@&quot;,$ReplaceMacros/javaCodeActivityOutput/ReplacedUrl,&quot;&#xA;&quot;)"/>
+                        </textContent>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <redishost>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/Log/redishost"/>
+                </redishost>
+                <key>
+                    <xsl:value-of select="&quot;conversionCounter&quot;"/>
+                </key>
+                <field>
+                    <xsl:value-of select="$Start/root/camp_id"/>
+                </field>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>789</pd:x>
+        <pd:y>85</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="SendAlertMail">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>670</pd:x>
+        <pd:y>88</pd:y>
+        <config>
+            <processName>/Level2Server/SendAlertMail.process</processName>
+            <spawn>true</spawn>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <subjectandcontent>
+                    <xsl:value-of select="concat(&#xA;&quot;camp_pl : &quot;,&#xA;$Start/root/camp_pl,&#xA;&quot;&#xA;db rm : &quot;,&#xA;$Start/root/rm,&#xA;&quot;&#xA;rm : &quot;,&#xA;$JudgeRM/javaCodeActivityOutput/randomNumber,&#xA;&quot;&#xA;error : &quot;,&#xA;tib:render-xml($Catch))"/>
+                </subjectandcontent>
+                <subject>
+                    <xsl:value-of select="&quot;Ubuntu Click SelfPost Failed&quot;"/>
+                </subject>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="realPL">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>63</pd:x>
+        <pd:y>198</pd:y>
+        <config>
+            <element>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="n_pl" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </element>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:if test="$Start/root/n_pl">
+                    <n_pl>
+                        <xsl:value-of select="$Start/root/n_pl"/>
+                    </n_pl>
+                </xsl:if>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SyncWithoutBlank">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>695</pd:x>
+        <pd:y>198</pd:y>
+        <config>
+            <processName>/Level2Server/SyncWithoutBlank.process</processName>
+        </config>
+        <pd:inputBindings>
+            <RequestActivityInput>
+                <Host>
+                    <xsl:value-of select="$Map-Data/root/Host"/>
+                </Host>
+                <RequestURI>
+                    <xsl:value-of select="$Map-Data/root/RequestUrl_Real"/>
+                </RequestURI>
+                <QueryString>
+                    <xsl:value-of select="$Map-Data/root/QueryString"/>
+                </QueryString>
+                <Timeout>
+                    <xsl:value-of select="60000"/>
+                </Timeout>
+            </RequestActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>JudgeRM</pd:from>
+        <pd:to>realPL</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>(0-$Start/root/rm)&gt;$JudgeRM/javaCodeActivityOutput/randomNumber and ($Start/root/camp_pl="" or not(exists($Start/root/camp_pl)))</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JudgeRM</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>(0-$Start/root/rm)&lt;=$JudgeRM/javaCodeActivityOutput/randomNumber</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>JudgeRM</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>JudgeRM</pd:from>
+        <pd:to>ReplaceMacros</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>(0-$Start/root/rm)&gt;$JudgeRM/javaCodeActivityOutput/randomNumber and ($Start/root/camp_pl!="" and (exists($Start/root/camp_pl)))</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ReplaceMacros</pd:from>
+        <pd:to>Redis_WriteConversionLog-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Redis_WriteConversionLog-1</pd:from>
+        <pd:to>Map Data</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Map Data</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>1=3</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>SendAlertMail</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SendAlertMail</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>realPL</pd:from>
+        <pd:to>ReplaceMacros</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>realPL</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>1=2</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Map Data</pd:from>
+        <pd:to>SyncWithoutBlank</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SyncWithoutBlank</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

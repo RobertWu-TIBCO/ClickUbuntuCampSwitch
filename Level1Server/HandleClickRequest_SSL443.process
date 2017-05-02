@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/json" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://xmlns.tibco.com/encodings/mime" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://xmlns.tibco.com/bw/plugin-api/messages/context" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns12="www.tibco.com/plugin/java/JavaMethodActivityInput">
+    <pd:name>Level1Server/HandleClickRequest_SSL443.process</pd:name>
+    <pd:startName>HandleClickRequest</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="HandleClickRequest">
+        <pd:type>com.tibco.plugin.http.HTTPEventSource</pd:type>
+        <pd:resourceType>httppalette.httpEventSource</pd:resourceType>
+        <pd:x>101</pd:x>
+        <pd:y>34</pd:y>
+        <config>
+            <outputMode>String</outputMode>
+            <defaultEncoding>UTF8</defaultEncoding>
+            <inputOutputVersion>5.3.0</inputOutputVersion>
+            <newMimeSupport>true</newMimeSupport>
+            <sharedChannel>/Level1Server/9194.sharedhttp</sharedChannel>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="User-Agent" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="X-Forwarded-For" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Charset" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Encoding" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Accept-Language" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Referer" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Length" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Connection" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xsd:element name="Cookie" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>679</pd:endX>
+    <pd:endY>184</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1472233940811</pd:targetNamespace>
+    <pd:activity name="SuccessResponse302">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>374</pd:x>
+        <pd:y>60</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HandleClickRequest</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <Headers>
+                    <StatusLine>
+                        <xsl:value-of select="&quot;HTTP/1.1 302 Moved Temporarily&quot;"/>
+                    </StatusLine>
+                    <Location>
+                        <xsl:value-of select="$ValidateRequestUrl/root/ReplacedUrl"/>
+                    </Location>
+                </Headers>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ValidateRequestUrl">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>99</pd:x>
+        <pd:y>186</pd:y>
+        <config>
+            <processName>/Level2Server/Validate_ReplaceTrackLink.process</processName>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <AllParams>
+                    <xsl:value-of select="concat(&quot;offer_id&quot;,substring-after($HandleClickRequest/ProcessStarterOutput/RequestURI, 'offer_id'))"/>
+                </AllParams>
+                <xsl:choose>
+                    <xsl:when test="$HandleClickRequest/ProcessStarterOutput/Headers/X-Forwarded-For">
+                        <xsl:if test="$HandleClickRequest/ProcessStarterOutput/Headers/X-Forwarded-For">
+                            <xff>
+                                <xsl:value-of select="$HandleClickRequest/ProcessStarterOutput/Headers/X-Forwarded-For"/>
+                            </xff>
+                        </xsl:if>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xff>
+                            <xsl:value-of select="$HandleClickRequest/ProcessStarterOutput/ns:Context/RemoteAddress"/>
+                        </xff>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:if test="$HandleClickRequest/ProcessStarterOutput/Headers/User-Agent">
+                    <ua>
+                        <xsl:value-of select="$HandleClickRequest/ProcessStarterOutput/Headers/User-Agent"/>
+                    </ua>
+                </xsl:if>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Catch">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>948</pd:x>
+        <pd:y>320</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="AnyErrorResponse">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>826</pd:x>
+        <pd:y>182</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HandleClickRequest</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of select="&quot;exception&quot;"/>
+                </asciiContent>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="WarningClientRequestUrl">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>674</pd:x>
+        <pd:y>36</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HandleClickRequest</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <asciiContent>
+                    <xsl:value-of select="'error url'"/>
+                </asciiContent>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SendAlertMail">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:description>tib:render-xml($Catch)
+
+$Catch/exceptiondata/*</pd:description>
+        <pd:x>827</pd:x>
+        <pd:y>316</pd:y>
+        <config>
+            <processName>/Level2Server/SendAlertMail.process</processName>
+            <spawn>true</spawn>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <subjectandcontent>
+                    <xsl:value-of select="concat(&#xA;tib:render-xml($Catch),&#xA;&quot;&#xA;&#xA;http input : &#xA;&#xA;&quot;,&#xA;tib:render-xml($HandleClickRequest)&#xA;)"/>
+                </subjectandcontent>
+                <subject>
+                    <xsl:value-of select="&quot;Ubuntu SSL Listener Error&quot;"/>
+                </subject>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Product_Lp">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>255</pd:x>
+        <pd:y>185</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HandleClickRequest</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <Headers>
+                    <StatusLine>
+                        <xsl:value-of select="&quot;HTTP/1.1 302 Moved Temporarily&quot;"/>
+                    </StatusLine>
+                    <Location>
+                        <xsl:value-of select="$ValidateRequestUrl/root/product_lp"/>
+                    </Location>
+                </Headers>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="mode2">
+        <pd:type>com.tibco.plugin.json.activities.JSONRenderActivity</pd:type>
+        <pd:resourceType>ae.activities.JSONRenderActivity</pd:resourceType>
+        <pd:x>102</pd:x>
+        <pd:y>335</pd:y>
+        <config>
+            <SchemaType>xsdType</SchemaType>
+            <BadgerfishCheck>false</BadgerfishCheck>
+            <ActivityInputEditor>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="statuscode" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="state" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </ActivityInputEditor>
+        </config>
+        <pd:inputBindings>
+            <ns2:ActivityInputClass>
+                <root>
+                    <statuscode>
+                        <xsl:value-of select="&quot;200&quot;"/>
+                    </statuscode>
+                    <state>
+                        <xsl:value-of select="&quot;success&quot;"/>
+                    </state>
+                </root>
+            </ns2:ActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SuccessJson">
+        <pd:type>com.tibco.plugin.http.HTTPResponseActivity</pd:type>
+        <pd:resourceType>httppalette.httpWebResponse</pd:resourceType>
+        <pd:x>388</pd:x>
+        <pd:y>335</pd:y>
+        <config>
+            <closeConnection>true</closeConnection>
+            <eventSource>HandleClickRequest</eventSource>
+            <Headers>
+                <xsd:element name="root">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="StatusLine" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Content-Type" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Set-Cookie" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Pragma" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="Location" type="xsd:string" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </Headers>
+        </config>
+        <pd:inputBindings>
+            <ResponseActivityInput>
+                <xsl:choose>
+                    <xsl:when test="$ValidateRequestUrl/root/GetParseData/nid=&quot;103&quot;">
+                        <asciiContent>
+                            <xsl:value-of select="'{&quot;ret&quot;:0,&quot;msg&quot;:&quot;success&quot;}'"/>
+                        </asciiContent>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <asciiContent>
+                            <xsl:value-of select="$mode2/ns2:ActivityOutputClass/jsonString"/>
+                        </asciiContent>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </ResponseActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SyncWithoutBlankInUa">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>548</pd:x>
+        <pd:y>331</pd:y>
+        <config>
+            <processName>/Level2Server/Syncs.process</processName>
+            <spawn>true</spawn>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <requesturl>
+                    <xsl:value-of select="$SyncWithoutBlankInUa_1/root/SyncResponseLocation"/>
+                </requesturl>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SyncWithoutBlankInUa_1">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>386</pd:x>
+        <pd:y>185</pd:y>
+        <config>
+            <processName>/Level2Server/Syncs.process</processName>
+            <spawn>false</spawn>
+        </config>
+        <pd:inputBindings>
+            <root>
+                <xsl:if test="$ValidateRequestUrl/root/ReplacedUrl">
+                    <requesturl>
+                        <xsl:value-of select="$ValidateRequestUrl/root/ReplacedUrl"/>
+                    </requesturl>
+                </xsl:if>
+            </root>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>SuccessResponse302</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Catch</pd:from>
+        <pd:to>SendAlertMail</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>AnyErrorResponse</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>WarningClientRequestUrl</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>HandleClickRequest</pd:from>
+        <pd:to>ValidateRequestUrl</pd:to>
+        <pd:xpathDescription>valid url</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>substring-before(substring-after($HandleClickRequest/ProcessStarterOutput/RequestURI, 'offer_id'),"n_id")!="" and substring-after($HandleClickRequest/ProcessStarterOutput/RequestURI, 'n_id=')!=""</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>HandleClickRequest</pd:from>
+        <pd:to>WarningClientRequestUrl</pd:to>
+        <pd:xpathDescription>wrong url</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ValidateRequestUrl</pd:from>
+        <pd:to>SuccessResponse302</pd:to>
+        <pd:xpathDescription>default mode</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SendAlertMail</pd:from>
+        <pd:to>AnyErrorResponse</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ValidateRequestUrl</pd:from>
+        <pd:to>Product_Lp</pd:to>
+        <pd:xpathDescription>mode 1</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$ValidateRequestUrl/root/mode="1"</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>ValidateRequestUrl</pd:from>
+        <pd:to>mode2</pd:to>
+        <pd:xpathDescription>mode 2</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>$ValidateRequestUrl/root/mode="2"</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>mode2</pd:from>
+        <pd:to>SuccessJson</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Product_Lp</pd:from>
+        <pd:to>SyncWithoutBlankInUa_1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SuccessJson</pd:from>
+        <pd:to>SyncWithoutBlankInUa_1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SyncWithoutBlankInUa</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SyncWithoutBlankInUa_1</pd:from>
+        <pd:to>End</pd:to>
+        <pd:xpathDescription>normal</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SyncWithoutBlankInUa_1</pd:from>
+        <pd:to>SyncWithoutBlankInUa</pd:to>
+        <pd:xpathDescription>deepsync</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>contains($HandleClickRequest/ProcessStarterOutput/RequestURI, "deepsync?")</pd:xpath>
+    </pd:transition>
+</pd:ProcessDefinition>

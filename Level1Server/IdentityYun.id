@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Repository:repository xmlns:Repository="http://www.tibco.com/xmlns/repo/types/2002">
+    <identity>
+        <objectType>url</objectType>
+        <name>IdentityYun</name>
+        <designer/>
+        <url>file:///home/share/project/ALiYun_Cert_Click/213985121070271.pfx</url>
+        <fileType>PKCS12</fileType>
+        <passPhrase>#!qjpTmU0zjYSqJaISABkvOG9hhz6ogrOxakMeNDd/4FNujeZICX85fQ==</passPhrase>
+    </identity>
+</Repository:repository>
