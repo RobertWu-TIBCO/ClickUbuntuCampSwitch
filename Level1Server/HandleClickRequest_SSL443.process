@@ -15,7 +15,7 @@
             <defaultEncoding>UTF8</defaultEncoding>
             <inputOutputVersion>5.3.0</inputOutputVersion>
             <newMimeSupport>true</newMimeSupport>
-            <sharedChannel>/Level1Server/9194.sharedhttp</sharedChannel>
+            <sharedChannel>/Level1Server/ClickConnection443.sharedhttp</sharedChannel>
             <Headers>
                 <xsd:element name="root">
                     <xsd:complexType>
@@ -301,7 +301,7 @@ $Catch/exceptiondata/*</pd:description>
         <pd:inputBindings>
             <ResponseActivityInput>
                 <xsl:choose>
-                    <xsl:when test="$ValidateRequestUrl/root/GetParseData/nid=&quot;103&quot;">
+                    <xsl:when test="$ValidateRequestUrl/root/GetParseData/nid=&quot;103&quot; or $ValidateRequestUrl/root/GetParseData/nid=&quot;120&quot;">
                         <asciiContent>
                             <xsl:value-of select="'{&quot;ret&quot;:0,&quot;msg&quot;:&quot;success&quot;}'"/>
                         </asciiContent>
