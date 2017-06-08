@@ -81,6 +81,7 @@
         <pd:y>66</pd:y>
         <config>
             <processName>/Level2Server/SyncWithoutBlank.process</processName>
+            <spawn>false</spawn>
         </config>
         <pd:inputBindings>
             <RequestActivityInput>
@@ -100,7 +101,7 @@
                     </QueryString>
                 </xsl:if>
                 <Timeout>
-                    <xsl:value-of select="60000"/>
+                    <xsl:value-of select="40000"/>
                 </Timeout>
             </RequestActivityInput>
         </pd:inputBindings>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
+<pd:ProcessDefinition xmlns:ns2="www.tibco.com/plugin/Sleep" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions">
     <pd:name>Level3Server/SelfPost.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startType>
@@ -513,6 +513,20 @@ public class SelfPostRedis_WriteConversionLog1{
             </RequestActivityInput>
         </pd:inputBindings>
     </pd:activity>
+    <pd:activity name="Sleep">
+        <pd:type>com.tibco.plugin.timer.SleepActivity</pd:type>
+        <pd:resourceType>ae.activities.sleep</pd:resourceType>
+        <pd:x>346</pd:x>
+        <pd:y>286</pd:y>
+        <config/>
+        <pd:inputBindings>
+            <ns2:SleepInputSchema>
+                <IntervalInMillisec>
+                    <xsl:value-of select="120000"/>
+                </IntervalInMillisec>
+            </ns2:SleepInputSchema>
+        </pd:inputBindings>
+    </pd:activity>
     <pd:transition>
         <pd:from>JudgeRM</pd:from>
         <pd:to>realPL</pd:to>
@@ -534,7 +548,7 @@ public class SelfPostRedis_WriteConversionLog1{
         <pd:to>JudgeRM</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
+        <pd:conditionType>otherwise</pd:conditionType>
     </pd:transition>
     <pd:transition>
         <pd:from>JudgeRM</pd:from>
@@ -546,7 +560,7 @@ public class SelfPostRedis_WriteConversionLog1{
     </pd:transition>
     <pd:transition>
         <pd:from>ReplaceMacros</pd:from>
-        <pd:to>Redis_WriteConversionLog-1</pd:to>
+        <pd:to>Sleep</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
@@ -600,11 +614,18 @@ public class SelfPostRedis_WriteConversionLog1{
         <pd:to>SyncWithoutBlank</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
-        <pd:conditionType>always</pd:conditionType>
+        <pd:conditionType>otherwise</pd:conditionType>
     </pd:transition>
     <pd:transition>
         <pd:from>SyncWithoutBlank</pd:from>
         <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Sleep</pd:from>
+        <pd:to>Redis_WriteConversionLog-1</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
