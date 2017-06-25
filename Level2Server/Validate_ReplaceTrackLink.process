@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pd:ProcessDefinition xmlns:ns2="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns1="http://www.tibco.com/pe/EngineTypes" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:ns3="http://www.tibco.com/pe/DeployedVarsType" xmlns:mc="java://StringUtils.checkidfa" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns2="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ns1="http://www.tibco.com/pe/EngineTypes" xmlns:ns="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:ns3="http://www.tibco.com/pe/DeployedVarsType" xmlns:mc="java://StringUtils.checkidfa" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:mc1="java://checkidfa" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <pd:name>Level2Server/Validate_ReplaceTrackLink.process</pd:name>
     <pd:startName>Start</pd:startName>
     <pd:startType>
@@ -508,10 +508,12 @@ public class Validate_ReplaceTrackLinkReplaceTrackLink{
 	protected String n_id = "";
 	protected String datetime = "";
 	protected boolean valididfa = false;
+	protected String product_lp = "";
 	protected String RelacedUrl = "";
 	protected Object ParamMapObj_Replaced = null;
 	protected String MapStr = "";
 	protected String idfa_original = "";
+	protected String ridfa = "";
 	public String getTrackLinkFromDB() {
 		return TrackLinkFromDB;
 	}
@@ -566,6 +568,12 @@ public class Validate_ReplaceTrackLinkReplaceTrackLink{
 	public void setvalididfa(boolean val) {
 		valididfa = val;
 	}
+	public String getproduct_lp() {
+		return product_lp;
+	}
+	public void setproduct_lp(String val) {
+		product_lp = val;
+	}
 	public String getRelacedUrl() {
 		return RelacedUrl;
 	}
@@ -590,6 +598,12 @@ public class Validate_ReplaceTrackLinkReplaceTrackLink{
 	public void setidfa_original(String val) {
 		idfa_original = val;
 	}
+	public String getridfa() {
+		return ridfa;
+	}
+	public void setridfa(String val) {
+		ridfa = val;
+	}
 /****** END SET/GET METHOD, DO NOT MODIFY *****/
 	public Validate_ReplaceTrackLinkReplaceTrackLink() {
 	}
@@ -610,6 +624,21 @@ public class Validate_ReplaceTrackLinkReplaceTrackLink{
 
 	public static StringBuffer GenChars(int max) {
 		StringBuffer buf = new StringBuffer("");
+		String allstr = "0123456789ABCDEF";
+//		String allstr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		Random rand = new Random();
+		int rannum = 0;
+		for (int i = 0; i &lt; max; i++) {
+			rannum = rand.nextInt(16);
+//			rannum = rand.nextInt(36);
+			buf.append(allstr.charAt(rannum));
+		}
+		return buf;
+	}
+
+/*
+	public static StringBuffer GenChars(int max) {
+		StringBuffer buf = new StringBuffer("");
 		String allstr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		Random rand = new Random();
 		int rannum = 0;
@@ -619,6 +648,7 @@ public class Validate_ReplaceTrackLinkReplaceTrackLink{
 		}
 		return buf;
 	}
+*/
 
 	public void invoke() throws Exception {
 /* Available Variables: DO NOT MODIFY
@@ -631,11 +661,13 @@ public class Validate_ReplaceTrackLinkReplaceTrackLink{
 	In  : String n_id
 	In  : String datetime
 	In  : boolean valididfa
+	In  : String product_lp
 	Out : String RelacedUrl
 	Out : String ClickID
 	Out : Object ParamMapObj_Replaced
 	Out : String MapStr
 	Out : String idfa_original
+	Out : String ridfa
 * Available Variables: DO NOT MODIFY *****/
 		String[] AllParams_array;
 		RelacedUrl = TrackLinkFromDB;
@@ -657,9 +689,10 @@ public class Validate_ReplaceTrackLinkReplaceTrackLink{
 		ParamMap.put("clickid", ClickID);
 		ParamMap.put("offer_id", offer_id);
 		ParamMap.put("n_id", n_id);
-		ParamMap.put("ridfa", GenRridfa().toString());
+		ridfa= GenRridfa().toString() ;
+		//ParamMap.put("ridfa",ridfa );
 		idfa_original=ParamMap.get("idfa");
-		if(!valididfa) ParamMap.put("idfa","");
+	//	if(!valididfa) ParamMap.put("idfa","");
 		for (String str : list) {
 			try {
 				String w = ""+ ParamMap.get(str);
@@ -672,12 +705,45 @@ public class Validate_ReplaceTrackLinkReplaceTrackLink{
 				continue;
 			}
 		}
-		ParamMap.remove("ridfa");
-		if(!valididfa &amp;&amp; !idfa_original.equals(""))ParamMap.put("idfa",idfa_original);
+	//	ParamMap.remove("ridfa");
+	//	if(!valididfa &amp;&amp; !idfa_original.equals(""))ParamMap.put("idfa",idfa_original);
+		if(!valididfa) RelacedUrl=product_lp;
 		ParamMapObj_Replaced = ParamMap;
 		MapStr = ParamMap.toString();}
 }
 </fullsource>
+            <outputData>
+                <row>
+                    <fieldName>RelacedUrl</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>ClickID</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>ParamMapObj_Replaced</fieldName>
+                    <fieldType>ObjectReference</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>MapStr</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>idfa_original</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>ridfa</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
             <inputData>
                 <row>
                     <fieldName>TrackLinkFromDB</fieldName>
@@ -724,38 +790,16 @@ public class Validate_ReplaceTrackLinkReplaceTrackLink{
                     <fieldType>boolean</fieldType>
                     <fieldRequired>optional</fieldRequired>
                 </row>
+                <row>
+                    <fieldName>product_lp</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
             </inputData>
-            <outputData>
-                <row>
-                    <fieldName>RelacedUrl</fieldName>
-                    <fieldType>string</fieldType>
-                    <fieldRequired>optional</fieldRequired>
-                </row>
-                <row>
-                    <fieldName>ClickID</fieldName>
-                    <fieldType>string</fieldType>
-                    <fieldRequired>optional</fieldRequired>
-                </row>
-                <row>
-                    <fieldName>ParamMapObj_Replaced</fieldName>
-                    <fieldType>ObjectReference</fieldType>
-                    <fieldRequired>optional</fieldRequired>
-                </row>
-                <row>
-                    <fieldName>MapStr</fieldName>
-                    <fieldType>string</fieldType>
-                    <fieldRequired>optional</fieldRequired>
-                </row>
-                <row>
-                    <fieldName>idfa_original</fieldName>
-                    <fieldType>string</fieldType>
-                    <fieldRequired>optional</fieldRequired>
-                </row>
-            </outputData>
             <byteCode>
                 <class>
                     <name>Validate_ReplaceTrackLinkReplaceTrackLink</name>
-                    <byteCode>yv66vgAAADMA6QkAQQCJCQBBAIoJAEEAiwkAQQCMCQBBAI0JAEEAjgkAQQCPCQBBAJAJAEEAkQkAQQCSCQBBAJMJAEEAlAkAQQCVCgBCAJYIAJcHAJgKABAAmQoAQQCaCgAQAJsIAJwKABAAnQgAngcAnwoAFwCWCgAXAKAKADEAoQoAEACiCACjCgAxAKQHAKUKAB4AlggApgoAMQCnCgAxAKgLAKkAqgcAqwcArAgArQoAJQCuCACvCACwCABFCABLCACxCgBBALIKABAAswgAtAoAJQC1BwC2CwCpALcLALgAuQsAuAC6BwC7CgA1AJYKADUAvAoANQCzCAC9CgAxAL4IAL8KADEAwAgAwQoAMQDCCgAlAMMKACUAswcAxAcAxQEAD1RyYWNrTGlua0Zyb21EQgEAEkxqYXZhL2xhbmcvU3RyaW5nOwEACG9mZmVyX2lkAQALUGFyYW1NYXBPYmoBABJMamF2YS9sYW5nL09iamVjdDsBAAhVbml4VGltZQEAClVuaXhUaW1lMTABAAdDbGlja0lEAQAEbl9pZAEACGRhdGV0aW1lAQAJdmFsaWRpZGZhAQABWgEAClJlbGFjZWRVcmwBABRQYXJhbU1hcE9ial9SZXBsYWNlZAEABk1hcFN0cgEADWlkZmFfb3JpZ2luYWwBABJnZXRUcmFja0xpbmtGcm9tREIBABQoKUxqYXZhL2xhbmcvU3RyaW5nOwEABENvZGUBAA9MaW5lTnVtYmVyVGFibGUBABJzZXRUcmFja0xpbmtGcm9tREIBABUoTGphdmEvbGFuZy9TdHJpbmc7KVYBAAtnZXRvZmZlcl9pZAEAC3NldG9mZmVyX2lkAQAOZ2V0UGFyYW1NYXBPYmoBABQoKUxqYXZhL2xhbmcvT2JqZWN0OwEADnNldFBhcmFtTWFwT2JqAQAVKExqYXZhL2xhbmcvT2JqZWN0OylWAQALZ2V0VW5peFRpbWUBAAtzZXRVbml4VGltZQEADWdldFVuaXhUaW1lMTABAA1zZXRVbml4VGltZTEwAQAKZ2V0Q2xpY2tJRAEACnNldENsaWNrSUQBAAdnZXRuX2lkAQAHc2V0bl9pZAEAC2dldGRhdGV0aW1lAQALc2V0ZGF0ZXRpbWUBAAxnZXR2YWxpZGlkZmEBAAMoKVoBAAxzZXR2YWxpZGlkZmEBAAQoWilWAQANZ2V0UmVsYWNlZFVybAEADXNldFJlbGFjZWRVcmwBABdnZXRQYXJhbU1hcE9ial9SZXBsYWNlZAEAF3NldFBhcmFtTWFwT2JqX1JlcGxhY2VkAQAJZ2V0TWFwU3RyAQAJc2V0TWFwU3RyAQAQZ2V0aWRmYV9vcmlnaW5hbAEAEHNldGlkZmFfb3JpZ2luYWwBAAY8aW5pdD4BAAMoKVYBAAlHZW5ScmlkZmEBABooKUxqYXZhL2xhbmcvU3RyaW5nQnVmZmVyOwEACEdlbkNoYXJzAQAbKEkpTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7AQANU3RhY2tNYXBUYWJsZQcAmAcAtgcAnwEABmludm9rZQcAxAcAxgcAxwcAqwcArAcAyAEACkV4Y2VwdGlvbnMBAApTb3VyY2VGaWxlAQAuVmFsaWRhdGVfUmVwbGFjZVRyYWNrTGlua1JlcGxhY2VUcmFja0xpbmsuamF2YQwAQwBEDABFAEQMAEYARwwASABEDABJAEQMAEoARAwASwBEDABMAEQMAE0ATgwATwBEDABQAEcMAFEARAwAUgBEDAB1AHYBAAABABZqYXZhL2xhbmcvU3RyaW5nQnVmZmVyDAB1AFgMAHkAegwAyQDKAQABLQwAyQDLAQAkQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVowMTIzNDU2Nzg5AQAQamF2YS91dGlsL1JhbmRvbQwAzADNDADOAM8MAMkA0AEABFwkXHsMANEA0gEAE2phdmEvdXRpbC9BcnJheUxpc3QBAAF9DADTANQMANUA1gcAxwwA1wDYAQATamF2YS9sYW5nL0V4Y2VwdGlvbgEAEWphdmEvdXRpbC9IYXNoTWFwAQACdHMMANkA2gEABHRzMTABAAdjbGlja2lkAQAFcmlkZmEMAHcAeAwA2wBUAQAEaWRmYQwA3ADdAQAQamF2YS9sYW5nL1N0cmluZwwA3gDfBwDIDADgAGoMAOEAXAEAF2phdmEvbGFuZy9TdHJpbmdCdWlsZGVyDADJAOIBAAIkewwA4wDkAQABJAwA5QDYAQAEbnVsbAwA5gDnDADoAN0BAFBMZXZlbDJTZXJ2ZXIvVmFsaWRhdGVfUmVwbGFjZVRyYWNrTGluay9WYWxpZGF0ZV9SZXBsYWNlVHJhY2tMaW5rUmVwbGFjZVRyYWNrTGluawEAEGphdmEvbGFuZy9PYmplY3QBABNbTGphdmEvbGFuZy9TdHJpbmc7AQAOamF2YS91dGlsL0xpc3QBABJqYXZhL3V0aWwvSXRlcmF0b3IBAAZhcHBlbmQBADIoTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7KUxqYXZhL2xhbmcvU3RyaW5nQnVmZmVyOwEALChMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7AQAHbmV4dEludAEABChJKUkBAAZjaGFyQXQBAAQoSSlDAQAbKEMpTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7AQAFc3BsaXQBACcoTGphdmEvbGFuZy9TdHJpbmc7KVtMamF2YS9sYW5nL1N0cmluZzsBAAdpbmRleE9mAQAVKExqYXZhL2xhbmcvU3RyaW5nOylJAQAJc3Vic3RyaW5nAQAWKElJKUxqYXZhL2xhbmcvU3RyaW5nOwEAA2FkZAEAFShMamF2YS9sYW5nL09iamVjdDspWgEAA3B1dAEAOChMamF2YS9sYW5nL09iamVjdDtMamF2YS9sYW5nL09iamVjdDspTGphdmEvbGFuZy9PYmplY3Q7AQAIdG9TdHJpbmcBAANnZXQBACYoTGphdmEvbGFuZy9PYmplY3Q7KUxqYXZhL2xhbmcvT2JqZWN0OwEACGl0ZXJhdG9yAQAWKClMamF2YS91dGlsL0l0ZXJhdG9yOwEAB2hhc05leHQBAARuZXh0AQAtKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZ0J1aWxkZXI7AQAIY29udGFpbnMBABsoTGphdmEvbGFuZy9DaGFyU2VxdWVuY2U7KVoBAAZlcXVhbHMBAAdyZXBsYWNlAQBEKExqYXZhL2xhbmcvQ2hhclNlcXVlbmNlO0xqYXZhL2xhbmcvQ2hhclNlcXVlbmNlOylMamF2YS9sYW5nL1N0cmluZzsBAAZyZW1vdmUAIQBBAEIAAAANAAQAQwBEAAAABABFAEQAAAAEAEYARwAAAAQASABEAAAABABJAEQAAAAEAEoARAAAAAQASwBEAAAABABMAEQAAAAEAE0ATgAAAAQATwBEAAAABABQAEcAAAAEAFEARAAAAAQAUgBEAAAAHgABAFMA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</byteCode>
+                    <byteCode>yv66vgAAADMA7gkAQQCPCQBBAJAJAEEAkQkAQQCSCQBBAJMJAEEAlAkAQQCVCQBBAJYJAEEAlwkAQQCYCQBBAJkJAEEAmgkAQQCbCQBBAJwJAEEAnQoAQgCeCACfBwCgCgASAKEKAEEAogoAEgCjCACkCgASAKUIAKYHAKcKABkAngoAGQCoCgAyAKkKABIAqggAqwoAMgCsBwCtCgAgAJ4IAK4KADIArwoAMgCwCwCxALIHALMHALQIALUKACcAtggAtwgAuAgARQgASwoAQQC5CgASALoIALsKACcAvAcAvQsAsQC+CwC/AMALAL8AwQcAwgoANgCeCgA2AMMKADYAuggAxAoAMgDFCADGCgAyAMcIAMgKADIAyQoAJwC6BwDKBwDLAQAPVHJhY2tMaW5rRnJvbURCAQASTGphdmEvbGFuZy9TdHJpbmc7AQAIb2ZmZXJfaWQBAAtQYXJhbU1hcE9iagEAEkxqYXZhL2xhbmcvT2JqZWN0OwEACFVuaXhUaW1lAQAKVW5peFRpbWUxMAEAB0NsaWNrSUQBAARuX2lkAQAIZGF0ZXRpbWUBAAl2YWxpZGlkZmEBAAFaAQAKcHJvZHVjdF9scAEAClJlbGFjZWRVcmwBABRQYXJhbU1hcE9ial9SZXBsYWNlZAEABk1hcFN0cgEADWlkZmFfb3JpZ2luYWwBAAVyaWRmYQEAEmdldFRyYWNrTGlua0Zyb21EQgEAFCgpTGphdmEvbGFuZy9TdHJpbmc7AQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEAEnNldFRyYWNrTGlua0Zyb21EQgEAFShMamF2YS9sYW5nL1N0cmluZzspVgEAC2dldG9mZmVyX2lkAQALc2V0b2ZmZXJfaWQBAA5nZXRQYXJhbU1hcE9iagEAFCgpTGphdmEvbGFuZy9PYmplY3Q7AQAOc2V0UGFyYW1NYXBPYmoBABUoTGphdmEvbGFuZy9PYmplY3Q7KVYBAAtnZXRVbml4VGltZQEAC3NldFVuaXhUaW1lAQANZ2V0VW5peFRpbWUxMAEADXNldFVuaXhUaW1lMTABAApnZXRDbGlja0lEAQAKc2V0Q2xpY2tJRAEAB2dldG5faWQBAAdzZXRuX2lkAQALZ2V0ZGF0ZXRpbWUBAAtzZXRkYXRldGltZQEADGdldHZhbGlkaWRmYQEAAygpWgEADHNldHZhbGlkaWRmYQEABChaKVYBAA1nZXRwcm9kdWN0X2xwAQANc2V0cHJvZHVjdF9scAEADWdldFJlbGFjZWRVcmwBAA1zZXRSZWxhY2VkVXJsAQAXZ2V0UGFyYW1NYXBPYmpfUmVwbGFjZWQBABdzZXRQYXJhbU1hcE9ial9SZXBsYWNlZAEACWdldE1hcFN0cgEACXNldE1hcFN0cgEAEGdldGlkZmFfb3JpZ2luYWwBABBzZXRpZGZhX29yaWdpbmFsAQAIZ2V0cmlkZmEBAAhzZXRyaWRmYQEABjxpbml0PgEAAygpVgEACUdlblJyaWRmYQEAGigpTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7AQAIR2VuQ2hhcnMBABsoSSlMamF2YS9sYW5nL1N0cmluZ0J1ZmZlcjsBAA1TdGFja01hcFRhYmxlBwCgBwC9BwCnAQAGaW52b2tlBwDKBwDMBwDNBwCzBwC0BwDOAQAKRXhjZXB0aW9ucwEAClNvdXJjZUZpbGUBAC5WYWxpZGF0ZV9SZXBsYWNlVHJhY2tMaW5rUmVwbGFjZVRyYWNrTGluay5qYXZhDABDAEQMAEUARAwARgBHDABIAEQMAEkARAwASgBEDABLAEQMAEwARAwATQBODABPAEQMAFAARAwAUQBHDABSAEQMAFMARAwAVABEDAB7AHwBAAABABZqYXZhL2xhbmcvU3RyaW5nQnVmZmVyDAB7AFoMAH8AgAwAzwDQAQABLQwAzwDRAQAQMDEyMzQ1Njc4OUFCQ0RFRgEAEGphdmEvdXRpbC9SYW5kb20MANIA0wwA1ADVDADPANYBAARcJFx7DADXANgBABNqYXZhL3V0aWwvQXJyYXlMaXN0AQABfQwA2QDaDADbANwHAM0MAN0A3gEAE2phdmEvbGFuZy9FeGNlcHRpb24BABFqYXZhL3V0aWwvSGFzaE1hcAEAAnRzDADfAOABAAR0czEwAQAHY2xpY2tpZAwAfQB+DADhAFYBAARpZGZhDADiAOMBABBqYXZhL2xhbmcvU3RyaW5nDADkAOUHAM4MAOYAbAwA5wBeAQAXamF2YS9sYW5nL1N0cmluZ0J1aWxkZXIMAM8A6AEAAiR7DADpAOoBAAEkDADrAN4BAARudWxsDADsAO0BAFBMZXZlbDJTZXJ2ZXIvVmFsaWRhdGVfUmVwbGFjZVRyYWNrTGluay9WYWxpZGF0ZV9SZXBsYWNlVHJhY2tMaW5rUmVwbGFjZVRyYWNrTGluawEAEGphdmEvbGFuZy9PYmplY3QBABNbTGphdmEvbGFuZy9TdHJpbmc7AQAOamF2YS91dGlsL0xpc3QBABJqYXZhL3V0aWwvSXRlcmF0b3IBAAZhcHBlbmQBADIoTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7KUxqYXZhL2xhbmcvU3RyaW5nQnVmZmVyOwEALChMamF2YS9sYW5nL1N0cmluZzspTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7AQAHbmV4dEludAEABChJKUkBAAZjaGFyQXQBAAQoSSlDAQAbKEMpTGphdmEvbGFuZy9TdHJpbmdCdWZmZXI7AQAFc3BsaXQBACcoTGphdmEvbGFuZy9TdHJpbmc7KVtMamF2YS9sYW5nL1N0cmluZzsBAAdpbmRleE9mAQAVKExqYXZhL2xhbmcvU3RyaW5nOylJAQAJc3Vic3RyaW5nAQAWKElJKUxqYXZhL2xhbmcvU3RyaW5nOwEAA2FkZAEAFShMamF2YS9sYW5nL09iamVjdDspWgEAA3B1dAEAOChMamF2YS9sYW5nL09iamVjdDtMamF2YS9sYW5nL09iamVjdDspTGphdmEvbGFuZy9PYmplY3Q7AQAIdG9TdHJpbmcBAANnZXQBACYoTGphdmEvbGFuZy9PYmplY3Q7KUxqYXZhL2xhbmcvT2JqZWN0OwEACGl0ZXJhdG9yAQAWKClMamF2YS91dGlsL0l0ZXJhdG9yOwEAB2hhc05leHQBAARuZXh0AQAtKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1N0cmluZ0J1aWxkZXI7AQAIY29udGFpbnMBABsoTGphdmEvbGFuZy9DaGFyU2VxdWVuY2U7KVoBAAZlcXVhbHMBAAdyZXBsYWNlAQBEKExqYXZhL2xhbmcvQ2hhclNlcXVlbmNlO0xqYXZhL2xhbmcvQ2hhclNlcXVlbmNlOylMamF2YS9sYW5nL1N0cmluZzsAIQBBAEIAAAAPAAQAQwBEAAAABABFAEQAAAAEAEYARwAAAAQASABEAAAABABJAEQAAAAEAEoARAAAAAQASwBEAAAABABMAEQAAAAE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</byteCode>
                 </class>
             </byteCode>
         </config>
@@ -791,9 +835,23 @@ public class Validate_ReplaceTrackLinkReplaceTrackLink{
                         <xsl:value-of select="$TimeStamp/root/ts"/>
                     </datetime>
                 </xsl:if>
-                <valididfa>
-                    <xsl:value-of select="1"/>
-                </valididfa>
+                <xsl:choose>
+                    <xsl:when test="$campaignswitch/root/offer_id=&quot;768&quot;">
+                        <valididfa>
+                            <xsl:value-of select="mc1:CheckIdfa($GenerateAllParams/javaCodeActivityOutput/idfa)"/>
+                        </valididfa>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <valididfa>
+                            <xsl:value-of select="1"/>
+                        </valididfa>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:if test="$campaignswitch/root/product_lp">
+                    <product_lp>
+                        <xsl:value-of select="$campaignswitch/root/product_lp"/>
+                    </product_lp>
+                </xsl:if>
             </javaCodeActivityInput>
         </pd:inputBindings>
     </pd:activity>
