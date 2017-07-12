@@ -103,6 +103,11 @@
                 <Timeout>
                     <xsl:value-of select="40000"/>
                 </Timeout>
+                <xsl:if test="$SplitUrl/root/requesturl">
+                    <fullUrl>
+                        <xsl:value-of select="$SplitUrl/root/requesturl"/>
+                    </fullUrl>
+                </xsl:if>
             </RequestActivityInput>
         </pd:inputBindings>
     </pd:activity>
