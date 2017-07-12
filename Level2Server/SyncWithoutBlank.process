@@ -10,11 +10,12 @@
                     <xsd:element name="RequestURI" type="xsd:string" minOccurs="0"/>
                     <xsd:element name="QueryString" type="xsd:string" minOccurs="0"/>
                     <xsd:element name="Timeout" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="fullUrl" type="xsd:string" minOccurs="0"/>
                 </xsd:sequence>
             </xsd:complexType>
         </xsd:element>
     </pd:startType>
-    <pd:startX>49</pd:startX>
+    <pd:startX>27</pd:startX>
     <pd:startY>55</pd:startY>
     <pd:returnBindings>
         <root>
@@ -106,8 +107,8 @@
     <pd:activity name="replaceBlankInUrl">
         <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
         <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
-        <pd:x>152</pd:x>
-        <pd:y>59</pd:y>
+        <pd:x>127</pd:x>
+        <pd:y>57</pd:y>
         <config>
             <fileName>SyncWithoutBlankreplaceBlankInUrl</fileName>
             <packageName>Level2Server.SyncWithoutBlank</packageName>
@@ -173,6 +174,133 @@ noBlank_queryString=queryString.replaceAll(" ","%20");}
             </javaCodeActivityInput>
         </pd:inputBindings>
     </pd:activity>
+    <pd:activity name="KeepEmptyParam">
+        <pd:type>com.tibco.plugin.java.JavaActivity</pd:type>
+        <pd:resourceType>ae.javapalette.javaActivity</pd:resourceType>
+        <pd:x>300</pd:x>
+        <pd:y>173</pd:y>
+        <config>
+            <fileName>SyncWithoutBlankKeepEmptyParam</fileName>
+            <packageName>Level2Server.SyncWithoutBlank</packageName>
+            <fullsource>package Level2Server.SyncWithoutBlank;
+import java.util.*;
+import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
+public class SyncWithoutBlankKeepEmptyParam{
+/****** START SET/GET METHOD, DO NOT MODIFY *****/
+	protected String url = "";
+	protected String USER_AGENT = "";
+	protected String responsestr = "";
+	public String geturl() {
+		return url;
+	}
+	public void seturl(String val) {
+		url = val;
+	}
+	public String getUSER_AGENT() {
+		return USER_AGENT;
+	}
+	public void setUSER_AGENT(String val) {
+		USER_AGENT = val;
+	}
+	public String getresponsestr() {
+		return responsestr;
+	}
+	public void setresponsestr(String val) {
+		responsestr = val;
+	}
+/****** END SET/GET METHOD, DO NOT MODIFY *****/
+	public SyncWithoutBlankKeepEmptyParam() {
+	}
+
+
+private String sendGet(String url) throws Exception {
+		
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        //默认值我GET
+        con.setRequestMethod("GET");
+
+        //添加请求头
+        con.setRequestProperty("User-Agent", USER_AGENT);
+
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'GET' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode);
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        //打印结果
+        System.out.println(response.toString());
+	return response.toString();
+    }
+
+	public void invoke() throws Exception {
+/* Available Variables: DO NOT MODIFY
+	In  : String url
+	In  : String USER_AGENT
+	Out : String responsestr
+* Available Variables: DO NOT MODIFY *****/
+
+responsestr=sendGet(url);}
+}
+</fullsource>
+            <inputData>
+                <row>
+                    <fieldName>url</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+                <row>
+                    <fieldName>USER_AGENT</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </inputData>
+            <outputData>
+                <row>
+                    <fieldName>responsestr</fieldName>
+                    <fieldType>string</fieldType>
+                    <fieldRequired>optional</fieldRequired>
+                </row>
+            </outputData>
+            <byteCode>
+                <class>
+                    <name>SyncWithoutBlankKeepEmptyParam</name>
+                    <byteCode>yv66vgAAADMAgQkAJABECQAkAEUJACQARgoAJQBHCABIBwBJCgAGAEoKAAYASwcATAgATQoACQBOCABPCgAJAFAKAAkAUQkAUgBTBwBUCgAQAEcIAFUKABAAVgoAEABXCgBYAFkIAFoKABAAWwcAXAcAXQoACQBeCgAZAF8KABgAYAcAYQoAHQBHCgAYAGIKAB0AYwoAGABkCgAdAFcKACQAZQcAZgcAZwEAA3VybAEAEkxqYXZhL2xhbmcvU3RyaW5nOwEAClVTRVJfQUdFTlQBAAtyZXNwb25zZXN0cgEABmdldHVybAEAFCgpTGphdmEvbGFuZy9TdHJpbmc7AQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEABnNldHVybAEAFShMamF2YS9sYW5nL1N0cmluZzspVgEADWdldFVTRVJfQUdFTlQBAA1zZXRVU0VSX0FHRU5UAQAOZ2V0cmVzcG9uc2VzdHIBAA5zZXRyZXNwb25zZXN0cgEABjxpbml0PgEAAygpVgEAB3NlbmRHZXQBACYoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvU3RyaW5nOwEADVN0YWNrTWFwVGFibGUHAGYHAGgHAEkHAEwHAFwHAGEBAApFeGNlcHRpb25zBwBpAQAGaW52b2tlAQAKU291cmNlRmlsZQEAI1N5bmNXaXRob3V0QmxhbmtLZWVwRW1wdHlQYXJhbS5qYXZhDAAmACcMACgAJwwAKQAnDAA0ADUBAAABAAxqYXZhL25ldC9VUkwMADQALwwAagBrAQAaamF2YS9uZXQvSHR0cFVSTENvbm5lY3Rpb24BAANHRVQMAGwALwEAClVzZXItQWdlbnQMAG0AbgwAbwBwBwBxDAByAHMBABdqYXZhL2xhbmcvU3RyaW5nQnVpbGRlcgEAIApTZW5kaW5nICdHRVQnIHJlcXVlc3QgdG8gVVJMIDogDAB0AHUMAHYAKwcAdwwAeAAvAQAQUmVzcG9uc2UgQ29kZSA6IAwAdAB5AQAWamF2YS9pby9CdWZmZXJlZFJlYWRlcgEAGWphdmEvaW8vSW5wdXRTdHJlYW1SZWFkZXIMAHoAewwANAB8DAA0AH0BABZqYXZhL2xhbmcvU3RyaW5nQnVmZmVyDAB+ACsMAHQAfwwAgAA1DAA2ADcBADxMZXZlbDJTZXJ2ZXIvU3luY1dpdGhvdXRCbGFuay9TeW5jV2l0aG91dEJsYW5rS2VlcEVtcHR5UGFyYW0BABBqYXZhL2xhbmcvT2JqZWN0AQAQamF2YS9sYW5nL1N0cmluZwEAE2phdmEvbGFuZy9FeGNlcHRpb24BAA5vcGVuQ29ubmVjdGlvbgEAGigpTGphdmEvbmV0L1VSTENvbm5lY3Rpb247AQAQc2V0UmVxdWVzdE1ldGhvZAEAEnNldFJlcXVlc3RQcm9wZXJ0eQEAJyhMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL1N0cmluZzspVgEAD2dldFJlc3BvbnNlQ29kZQEAAygpSQEAEGphdmEvbGFuZy9TeXN0ZW0BAANvdXQBABVMamF2YS9pby9QcmludFN0cmVhbTsBAAZhcHBlbmQBAC0oTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvU3RyaW5nQnVpbGRlcjsBAAh0b1N0cmluZwEAE2phdmEvaW8vUHJpbnRTdHJlYW0BAAdwcmludGxuAQAcKEkpTGphdmEvbGFuZy9TdHJpbmdCdWlsZGVyOwEADmdldElucHV0U3RyZWFtAQAXKClMamF2YS9pby9JbnB1dFN0cmVhbTsBABgoTGphdmEvaW8vSW5wdXRTdHJlYW07KVYBABMoTGphdmEvaW8vUmVhZGVyOylWAQAIcmVhZExpbmUBACwoTGphdmEvbGFuZy9TdHJpbmc7KUxqYXZhL2xhbmcvU3RyaW5nQnVmZmVyOwEABWNsb3NlACEAJAAlAAAAAwAEACYAJwAAAAQAKAAnAAAABAApACcAAAAJAAEAKgArAAEALAAAAB0AAQABAAAABSq0AAGwAAAAAQAtAAAABgABAAAAEwABAC4ALwABACwAAAAiAAIAAgAAAAYqK7UAAbEAAAABAC0AAAAKAAIAAAAWAAUAFwABADAAKwABACwAAAAdAAEAAQAAAAUqtAACsAAAAAEALQAAAAYAAQAAABkAAQAxAC8AAQAsAAAAIgACAAIAAAAGKiu1AAKxAAAAAQAtAAAACgACAAAAHAAFAB0AAQAyACsAAQAsAAAAHQABAAEAAAAFKrQAA7AAAAABAC0AAAAGAAEAAAAfAAEAMwAvAAEALAAAACIAAgACAAAABiortQADsQAAAAEALQAAAAoAAgAAACIABQAjAAEANAA1AAEALAAAAD8AAgABAAAAFyq3AAQqEgW1AAEqEgW1AAIqEgW1AAOxAAAAAQAtAAAAFgAFAAAAJQAEAA8ACgAQABAAEQAWACYAAgA2ADcAAgAsAAABLwAFAAgAAACjuwAGWSu3AAdNLLYACMAACU4tEgq2AAstEgwqtAACtgANLbYADjYEsgAPuwAQWbcAERIStgATK7YAE7YAFLYAFbIAD7sAEFm3ABESFrYAExUEtgAXtgAUtgAVuwAYWbsAGVkttgAatwAbtwAcOgW7AB1ZtwAeOgcZBbYAH1k6BsYADhkHGQa2ACBXp//tGQW2ACGyAA8ZB7YAIrYAFRkHtgAisAAAAAIALQAAADoADgAAACsACQAsABEALwAXADIAIQA0ACcANQBAADYAWgA4AG4AOwB3AD0AggA+AI0AQACSAEMAnQBEADgAAAA6AAL/AHcACAcAOQcAOgcAOwcAPAEHAD0ABwA+AAD/ABUACAcAOQcAOgcAOwcAPAEHAD0HADoHAD4AAAA/AAAABAABAEAAAQBBADUAAgAsAAAAJQADAAEAAAANKioqtAABtwAjtQADsQAAAAEALQAAAAYAAQAAAE4APwAAAAQAAQBAAAEAQgAAAAIAQw==</byteCode>
+                </class>
+            </byteCode>
+        </config>
+        <pd:inputBindings>
+            <javaCodeActivityInput>
+                <xsl:if test="$Start/RequestActivityInput/fullUrl">
+                    <url>
+                        <xsl:value-of select="$Start/RequestActivityInput/fullUrl"/>
+                    </url>
+                </xsl:if>
+                <USER_AGENT>
+                    <xsl:value-of select="&quot;Mozilla/5.0&quot;"/>
+                </USER_AGENT>
+            </javaCodeActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
     <pd:transition>
         <pd:from>Start</pd:from>
         <pd:to>replaceBlankInUrl</pd:to>
@@ -190,6 +318,21 @@ noBlank_queryString=queryString.replaceAll(" ","%20");}
     <pd:transition>
         <pd:from>replaceBlankInUrl</pd:from>
         <pd:to>SyncWithoutBlank</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>contains($Start/RequestActivityInput/fullUrl, "?")</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>replaceBlankInUrl</pd:from>
+        <pd:to>KeepEmptyParam</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>otherwise</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>KeepEmptyParam</pd:from>
+        <pd:to>End</pd:to>
         <pd:lineType>Default</pd:lineType>
         <pd:lineColor>-16777216</pd:lineColor>
         <pd:conditionType>always</pd:conditionType>
