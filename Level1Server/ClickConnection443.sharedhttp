@@ -39,9 +39,9 @@
                 <PropertyDefaultValue>60000</PropertyDefaultValue>
             </row>
         </HttpConnectionProperties>
-        <Port>443</Port>
+        <Port>9443</Port>
         <Host>localhost</Host>
-        <useSsl>true</useSsl>
+        <useSsl>false</useSsl>
         <ns1:ssl xmlns:ns1="http://www.tibco.com/xmlns/aemeta/services/2002">
             <ns1:strongCipherSuitesOnly>false</ns1:strongCipherSuitesOnly>
             <ns1:identity isRef="true">/Level1Server/IdentityYun.id</ns1:identity>
